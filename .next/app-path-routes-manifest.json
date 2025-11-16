@@ -1,0 +1,14 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/about/page": "/about",
+  "/home/page": "/home",
+  "/registration/page": "/registration",
+  "/employers/page": "/employers",
+  "/job-seekers/page": "/job-seekers",
+  "/universities/page": "/universities",
+  "/page": "/",
+  "/resume/page": "/resume",
+  "/profile/page": "/profile",
+  "/video/page": "/video",
+  "/login/page": "/login"
+}
