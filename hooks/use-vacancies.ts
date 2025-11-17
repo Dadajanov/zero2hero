@@ -1,53 +1,119 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState, useEffect } from "react"
 import { api } from "@/lib/api"
 
-// Example hook for fetching vacancies
 export function useVacancies() {
-  return useQuery({
-    queryKey: ["vacancies"],
-    queryFn: api.getVacancies,
-  })
+  const [data, setData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const result = await api.getVacancies()
+        setData(result)
+      } catch (err) {
+        setError(err as Error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  return { data, isLoading, error }
 }
 
-// Example hook for fetching courses
 export function useCourses() {
-  return useQuery({
-    queryKey: ["courses"],
-    queryFn: api.getCourses,
-  })
+  const [data, setData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const result = await api.getCourses()
+        setData(result)
+      } catch (err) {
+        setError(err as Error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  return { data, isLoading, error }
 }
 
-// Example hook for fetching user profile
 export function useUserProfile(userId: string) {
-  return useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => api.getUserProfile(userId),
-    enabled: !!userId, // Only fetch if userId exists
-  })
+  const [data, setData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
+    if (!userId) return
+
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const result = await api.getUserProfile(userId)
+        setData(result)
+      } catch (err) {
+        setError(err as Error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
+  }, [userId])
+
+  return { data, isLoading, error }
 }
 
-// Example mutation hook for updating user profile
 export function useUpdateUserProfile() {
-  const queryClient = useQueryClient()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
-  return useMutation({
-    mutationFn: ({ userId, data }: { userId: string; data: any }) => api.updateUserProfile(userId, data),
-    onSuccess: (_, variables) => {
-      // Invalidate and refetch user profile after successful update
-      queryClient.invalidateQueries({ queryKey: ["user", variables.userId] })
-    },
-  })
+  const mutate = async ({ userId, data }: { userId: string; data: any }) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const result = await api.updateUserProfile(userId, data)
+      return result
+    } catch (err) {
+      const error = err as Error
+      setError(error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { mutate, isLoading, error }
 }
 
-// Example mutation hook for registration
 export function useRegistration() {
-  return useMutation({
-    mutationFn: api.submitRegistration,
-    onSuccess: (data) => {
-      console.log("[v0] Registration successful:", data)
-    },
-    onError: (error) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  const mutate = async (data: any) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const result = await api.submitRegistration(data)
+      console.log("[v0] Registration successful:", result)
+      return result
+    } catch (err) {
+      const error = err as Error
+      setError(error)
       console.error("[v0] Registration failed:", error)
-    },
-  })
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { mutate, isLoading, error }
 }

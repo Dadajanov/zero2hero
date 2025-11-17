@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { GraduationCap, Users, Award, BookOpen, ArrowRight } from "lucide-react"
+import { useRouter } from 'next/navigation'
+import { GraduationCap, Users, Award, BookOpen, ArrowRight } from 'lucide-react'
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
 
@@ -71,7 +71,7 @@ export default function UniversitiesPage() {
               className="bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all"
               whileHover={{ scale: 1.05 }}
             >
-              {language === "ru" ? "Стать партнером" : language === "uz" ? "Hamkor bo'lish" : "Become a Partner"}
+              {t("becomePartner")}
             </motion.button>
           </div>
         </div>
@@ -82,18 +82,10 @@ export default function UniversitiesPage() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div variants={fadeInUp} initial="initial" animate="animate">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              {language === "ru"
-                ? "Партнерство с университетами"
-                : language === "uz"
-                  ? "Universitetlar bilan hamkorlik"
-                  : "Partnership with Universities"}
+              {t("partnershipWithUniversities")}
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              {language === "ru"
-                ? "Помогите своим студентам найти оплачиваемые стажировки и начать успешную карьеру"
-                : language === "uz"
-                  ? "Talabalaringizga oplanadigan stajirovka topishda va muvaffaqiyatli karyera boshlashda yordam bering"
-                  : "Help your students find paid internships and start successful careers"}
+              {t("helpStudentsFindInternships")}
             </p>
             <motion.button
               onClick={() => router.push("/registration")}
@@ -124,58 +116,24 @@ export default function UniversitiesPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Преимущества для университетов"
-              : language === "uz"
-                ? "Universitetlar uchun afzalliklar"
-                : "Benefits for Universities"}
+            {t("benefitsForUniversities")}
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: <Users size={48} />,
-                title:
-                  language === "ru"
-                    ? "Трудоустройство студентов"
-                    : language === "uz"
-                      ? "Talabalarni ishga joylashtirish"
-                      : "Student Employment",
-                desc:
-                  language === "ru"
-                    ? "Повышение процента трудоустройства выпускников"
-                    : language === "uz"
-                      ? "Bitiruvchilarning ishga joylashtirish foizini oshirish"
-                      : "Increase graduate employment rates",
+                title: t("studentEmployment"),
+                desc: t("increaseGraduateEmployment"),
               },
               {
                 icon: <Award size={48} />,
-                title:
-                  language === "ru"
-                    ? "Престиж университета"
-                    : language === "uz"
-                      ? "Universitet obro'si"
-                      : "University Prestige",
-                desc:
-                  language === "ru"
-                    ? "Укрепление репутации и привлечение абитуриентов"
-                    : language === "uz"
-                      ? "Obro'ni mustahkamlash va abituriyentlarni jalb qilish"
-                      : "Strengthen reputation and attract applicants",
+                title: t("universityPrestige"),
+                desc: t("strengthenReputationAndAttract"),
               },
               {
                 icon: <BookOpen size={48} />,
-                title:
-                  language === "ru"
-                    ? "Практическое обучение"
-                    : language === "uz"
-                      ? "Amaliy ta'lim"
-                      : "Practical Training",
-                desc:
-                  language === "ru"
-                    ? "Связь теории с практикой через стажировки"
-                    : language === "uz"
-                      ? "Stajirovkalar orqali nazariya va amaliyotni bog'lash"
-                      : "Connect theory with practice through internships",
+                title: t("practicalTraining"),
+                desc: t("connectTheoryWithPractice"),
               },
             ].map((benefit, idx) => (
               <motion.div
@@ -205,69 +163,29 @@ export default function UniversitiesPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru" ? "Как это работает?" : language === "uz" ? "Bu qanday ishlaydi?" : "How It Works?"}
+            {t("howItWorks")}
           </motion.h2>
           <div className="grid md:grid-cols-4 gap-6">
             {[
               {
                 step: "1",
-                title:
-                  language === "ru"
-                    ? "Партнерское соглашение"
-                    : language === "uz"
-                      ? "Hamkorlik shartnomasi"
-                      : "Partnership Agreement",
-                desc:
-                  language === "ru"
-                    ? "Подписание соглашения о сотрудничестве"
-                    : language === "uz"
-                      ? "Hamkorlik shartnomasini imzolash"
-                      : "Sign a cooperation agreement",
+                title: t("partnershipAgreement"),
+                desc: t("signCooperationAgreement"),
               },
               {
                 step: "2",
-                title:
-                  language === "ru"
-                    ? "Регистрация студентов"
-                    : language === "uz"
-                      ? "Talabalarni ro'yxatdan o'tkazish"
-                      : "Student Registration",
-                desc:
-                  language === "ru"
-                    ? "Студенты создают профили на платформе"
-                    : language === "uz"
-                      ? "Talabalar platformada profillar yaratadi"
-                      : "Students create profiles on the platform",
+                title: t("studentRegistration"),
+                desc: t("studentsCreateProfiles"),
               },
               {
                 step: "3",
-                title:
-                  language === "ru"
-                    ? "Подбор стажировок"
-                    : language === "uz"
-                      ? "Stajirovkalarni tanlash"
-                      : "Internship Matching",
-                desc:
-                  language === "ru"
-                    ? "Автоматический подбор вакансий"
-                    : language === "uz"
-                      ? "Avtomatik vakansiyalarni tanlash"
-                      : "Automatic vacancy matching",
+                title: t("internshipMatching"),
+                desc: t("automaticVacancyMatching"),
               },
               {
                 step: "4",
-                title:
-                  language === "ru"
-                    ? "Мониторинг прогресса"
-                    : language === "uz"
-                      ? "Taraqqiyotni kuzatish"
-                      : "Progress Monitoring",
-                desc:
-                  language === "ru"
-                    ? "Отслеживание трудоустройства студентов"
-                    : language === "uz"
-                      ? "Talabalarning ishga joylashishini kuzatish"
-                      : "Track student employment",
+                title: t("progressMonitoring"),
+                desc: t("trackStudentEmployment"),
               },
             ].map((item, idx) => (
               <motion.div
@@ -296,30 +214,15 @@ export default function UniversitiesPage() {
             {[
               {
                 number: "50+",
-                label:
-                  language === "ru"
-                    ? "Университетов-партнеров"
-                    : language === "uz"
-                      ? "Hamkor universitetlar"
-                      : "Partner Universities",
+                label: t("partnerUniversities"),
               },
               {
                 number: "10,000+",
-                label:
-                  language === "ru"
-                    ? "Трудоустроенных студентов"
-                    : language === "uz"
-                      ? "Ishga joylashgan talabalar"
-                      : "Employed Students",
+                label: t("employedStudents"),
               },
               {
                 number: "500+",
-                label:
-                  language === "ru"
-                    ? "Компаний-работодателей"
-                    : language === "uz"
-                      ? "Ish beruvchi kompaniyalar"
-                      : "Employer Companies",
+                label: t("employerCompanies"),
               },
             ].map((stat, idx) => (
               <motion.div
@@ -346,11 +249,7 @@ export default function UniversitiesPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Готовы стать партнером?"
-              : language === "uz"
-                ? "Hamkor bo'lishga tayyormisiz?"
-                : "Ready to Become a Partner?"}
+            {t("readyToBecomePartner")}
           </motion.h2>
           <motion.p
             className="text-xl text-blue-100 mb-8"
@@ -358,11 +257,7 @@ export default function UniversitiesPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Присоединяйтесь к ведущим университетам, которые помогают своим студентам строить успешную карьеру"
-              : language === "uz"
-                ? "Talabalariga muvaffaqiyatli karyera qurishda yordam beradigan yetakchi universitetlarga qo'shiling"
-                : "Join leading universities helping their students build successful careers"}
+            {t("joinLeadingUniversities")}
           </motion.p>
           <motion.button
             onClick={() => router.push("/registration")}

@@ -1,4 +1,4 @@
-import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios"
+import axios, { type AxiosResponse, type AxiosError, type InternalAxiosRequestConfig } from "axios"
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +29,9 @@ const headersRequestInterceptor = async (
   requestConfig.headers["X-Tenant-ID"] = "1"
   requestConfig.headers["X-Device-ID"] = "InnTouch"
   requestConfig.headers["x-innTouch-app-language"] = language
+
+  console.log("[v0] Request URL:", requestConfig.baseURL + requestConfig.url)
+  console.log("[v0] Request headers:", requestConfig.headers)
 
   return requestConfig
 }
@@ -80,8 +83,8 @@ export const httpClient = axios.create({
 // Apply request interceptor
 httpClient.interceptors.request.use(headersRequestInterceptor)
 
-  // Apply response interceptor
-  ; (httpClient.defaults as any).shouldReturnOriginalResponse = false
+// Apply response interceptor
+;(httpClient.defaults as any).shouldReturnOriginalResponse = false
 httpClient.interceptors.response.use(extractResponse, extractErrorResponse)
 
 // ----------------------------------------------------------------------

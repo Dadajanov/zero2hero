@@ -1,8 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { LogOut, User } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { LogOut, User } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
 import ScrollSection from "./scroll-section" // Import ScrollSection component
@@ -248,7 +248,7 @@ export default function HomePage() {
                         {t("topVacancies")}
                       </span>
                       <span className="bg-primary/90 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                        Новая
+                        {t("newBadge")}
                       </span>
                     </div>
                     <h3 className="text-white text-2xl md:text-3xl font-bold mb-2">
@@ -292,18 +292,18 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             {[
-              { title: "Администратор", salary: "8 000 000 UZS", vacancies: 500 },
-              { title: "Программист", salary: "10 000 000 UZS", vacancies: 700 },
-              { title: "Дизайнер", salary: "7 500 000 UZS", vacancies: 300 },
-              { title: "Маркетолог", salary: "9 000 000 UZS", vacancies: 450 },
-              { title: "Менеджер", salary: "8 500 000 UZS", vacancies: 600 },
-              { title: "Аналитик", salary: "11 000 000 UZS", vacancies: 350 },
-              { title: "HR специалист", salary: "7 000 000 UZS", vacancies: 250 },
-              { title: "Бухгалтер", salary: "6 500 000 UZS", vacancies: 400 },
-              { title: "Юрист", salary: "9 500 000 UZS", vacancies: 200 },
-              { title: "Переводчик", salary: "6 000 000 UZS", vacancies: 150 },
-              { title: "Инженер", salary: "12 000 000 UZS", vacancies: 550 },
-              { title: "Архитектор", salary: "13 000 000 UZS", vacancies: 180 },
+              { title: t("administrator"), salary: "8 000 000 UZS", vacancies: 500 },
+              { title: t("programmer"), salary: "10 000 000 UZS", vacancies: 700 },
+              { title: t("designer"), salary: "7 500 000 UZS", vacancies: 300 },
+              { title: t("marketer"), salary: "9 000 000 UZS", vacancies: 450 },
+              { title: t("manager"), salary: "8 500 000 UZS", vacancies: 600 },
+              { title: t("analyst"), salary: "11 000 000 UZS", vacancies: 350 },
+              { title: t("hrSpecialist"), salary: "7 000 000 UZS", vacancies: 250 },
+              { title: t("accountant"), salary: "6 500 000 UZS", vacancies: 400 },
+              { title: t("lawyer"), salary: "9 500 000 UZS", vacancies: 200 },
+              { title: t("translator"), salary: "6 000 000 UZS", vacancies: 150 },
+              { title: t("engineer"), salary: "12 000 000 UZS", vacancies: 550 },
+              { title: t("architect"), salary: "13 000 000 UZS", vacancies: 180 },
             ].map((job) => (
               <motion.div
                 key={job.title}
@@ -313,7 +313,7 @@ export default function HomePage() {
               >
                 <h3 className="text-xl font-bold text-foreground mb-2">{job.title}</h3>
                 <p className="text-primary font-semibold mb-2">{job.salary}</p>
-                <p className="text-gray-600">{job.vacancies} вакансий</p>
+                <p className="text-gray-600">{job.vacancies} {t("vacancies")}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -414,15 +414,15 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-6 mt-8">
               <div className="text-center p-6 bg-blue-50 rounded-xl">
                 <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
-                <p className="text-gray-600">Студентов нашли работу</p>
+                <p className="text-gray-600">{t("studentsFoundJobs")}</p>
               </div>
               <div className="text-center p-6 bg-green-50 rounded-xl">
                 <div className="text-4xl font-bold text-green-600 mb-2">500+</div>
-                <p className="text-gray-600">Компаний-партнеров</p>
+                <p className="text-gray-600">{t("partnerCompanies")}</p>
               </div>
               <div className="text-center p-6 bg-purple-50 rounded-xl">
                 <div className="text-4xl font-bold text-purple-600 mb-2">50+</div>
-                <p className="text-gray-600">Бесплатных курсов</p>
+                <p className="text-gray-600">{t("freeCourses")}</p>
               </div>
             </div>
           </motion.div>

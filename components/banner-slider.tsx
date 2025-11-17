@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { getTranslation } from "@/lib/translations"
 
 const bannerImages = [
   {
@@ -25,8 +26,30 @@ const bannerImages = [
   },
 ]
 
-export default function BannerSlider() {
+export default function BannerSlider({ language }: { language: "en" | "ru" | "uz" }) {
+  const t = getTranslation(language)
   const [currentSlide, setCurrentSlide] = useState(0)
+
+  const bannerImages = [
+    {
+      id: 1,
+      query: "professional office team collaboration modern workspace",
+      title: t("banner1Title"),
+      subtitle: t("banner1Subtitle"),
+    },
+    {
+      id: 2,
+      query: "young professionals working on laptops in modern office",
+      title: t("banner2Title"),
+      subtitle: t("banner2Subtitle"),
+    },
+    {
+      id: 3,
+      query: "business meeting handshake partnership success",
+      title: t("banner3Title"),
+      subtitle: t("banner3Subtitle"),
+    },
+  ]
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -56,7 +79,7 @@ export default function BannerSlider() {
           className="absolute inset-0"
         >
           <img
-            src={`/.jpg?height=500&width=1200&query=${bannerImages[currentSlide].query}`}
+            src={`/.jpg?key=eocd2&height=500&width=1200&query=${bannerImages[currentSlide].query}`}
             alt={bannerImages[currentSlide].title}
             className="w-full h-full object-cover"
           />

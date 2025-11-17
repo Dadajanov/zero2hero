@@ -5,8 +5,8 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
-import { Users, Target, Award, Heart, Briefcase, BookOpen, TrendingUp, LogOut, User } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { Users, Target, Award, Heart, Briefcase, BookOpen, TrendingUp, LogOut, User } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
 import MobileMenu from "./mobile-menu"
@@ -49,95 +49,55 @@ export default function AboutPage() {
   const values = [
     {
       icon: Target,
-      title: language === "ru" ? "Наша миссия" : language === "uz" ? "Bizning missiyamiz" : "Our Mission",
-      description:
-        language === "ru"
-          ? "Помогать молодым специалистам найти свой путь в карьере и реализовать свой потенциал через качественные стажировки и работу."
-          : language === "uz"
-            ? "Yosh mutaxassislarga karyerada o'z yo'llarini topishga va sifatli stajirovka va ish orqali o'z salohiyatlarini ro'yobga chiqarishga yordam berish."
-            : "Help young professionals find their career path and realize their potential through quality internships and work.",
+      title: t("ourMission"),
+      description: t("missionDescription"),
     },
     {
       icon: Award,
-      title: language === "ru" ? "Наше видение" : language === "uz" ? "Bizning ko'rinishimiz" : "Our Vision",
-      description:
-        language === "ru"
-          ? "Стать ведущей платформой в Узбекистане, которая соединяет талантливую молодежь с лучшими работодателями."
-          : language === "uz"
-            ? "O'zbekistonda iqtidorli yoshlarni eng yaxshi ish beruvchilar bilan bog'laydigan yetakchi platforma bo'lish."
-            : "Become the leading platform in Uzbekistan connecting talented youth with the best employers.",
+      title: t("ourVision"),
+      description: t("visionDescription"),
     },
     {
       icon: Heart,
-      title: language === "ru" ? "Наши ценности" : language === "uz" ? "Bizning qadriyatlarimiz" : "Our Values",
-      description:
-        language === "ru"
-          ? "Честность, профессионализм, инновации и забота о каждом пользователе нашей платформы."
-          : language === "uz"
-            ? "Halollik, professionallik, innovatsiyalar va platformamizning har bir foydalanuvchisiga g'amxo'rlik."
-            : "Honesty, professionalism, innovation, and care for every user of our platform.",
+      title: t("ourValues"),
+      description: t("valuesDescription"),
     },
   ]
 
   const stats = [
     {
       number: "10,000+",
-      label: language === "ru" ? "Студентов" : language === "uz" ? "Talabalar" : "Students",
+      label: t("students"),
     },
     {
       number: "500+",
-      label: language === "ru" ? "Компаний" : language === "uz" ? "Kompaniyalar" : "Companies",
+      label: t("companies"),
     },
     {
       number: "50+",
-      label: language === "ru" ? "Университетов" : language === "uz" ? "Universitetlar" : "Universities",
+      label: t("universities"),
     },
     {
       number: "95%",
-      label:
-        language === "ru"
-          ? "Успешных трудоустройств"
-          : language === "uz"
-            ? "Muvaffaqiyatli ishga joylashish"
-            : "Successful Placements",
+      label: t("successfulEmployments"),
     },
   ]
 
   const team = [
     {
       name: language === "ru" ? "Алишер Каримов" : language === "uz" ? "Alisher Karimov" : "Alisher Karimov",
-      role: language === "ru" ? "Основатель и CEO" : language === "uz" ? "Asoschisi va CEO" : "Founder & CEO",
-      description:
-        language === "ru"
-          ? "10+ лет опыта в HR и карьерном консультировании"
-          : language === "uz"
-            ? "HR va karyera maslahati bo'yicha 10+ yillik tajriba"
-            : "10+ years of experience in HR and career consulting",
+      role: t("founderCEO"),
+      description: t("tenYearsExperience"),
     },
     {
       name: language === "ru" ? "Нигора Рахимова" : language === "uz" ? "Nigora Rahimova" : "Nigora Rakhimova",
-      role:
-        language === "ru"
-          ? "Директор по развитию"
-          : language === "uz"
-            ? "Rivojlanish direktori"
-            : "Development Director",
-      description:
-        language === "ru"
-          ? "Эксперт в области образования и партнерских отношений"
-          : language === "uz"
-            ? "Ta'lim va hamkorlik munosabatlari bo'yicha mutaxassis"
-            : "Expert in education and partnership relations",
+      role: t("developmentDirector"),
+      description: t("expertInEducation"),
     },
     {
       name: language === "ru" ? "Тимур Усманов" : language === "uz" ? "Timur Usmanov" : "Timur Usmanov",
-      role: language === "ru" ? "Технический директор" : language === "uz" ? "Texnik direktor" : "Technical Director",
-      description:
-        language === "ru"
-          ? "Специалист по разработке инновационных платформ"
-          : language === "uz"
-            ? "Innovatsion platformalarni ishlab chiqish bo'yicha mutaxassis"
-            : "Specialist in developing innovative platforms",
+      role: t("technicalDirector"),
+      description: t("specialistInPlatforms"),
     },
   ]
 
@@ -260,14 +220,10 @@ export default function AboutPage() {
       >
         <motion.div className="text-center" variants={fadeInUp}>
           <motion.h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 uppercase" variants={fadeInUp}>
-            {language === "ru" ? "О нас" : language === "uz" ? "Biz haqida" : "About Us"}
+            {t("aboutUs")}
           </motion.h1>
           <motion.p className="text-xl text-gray-600 max-w-3xl mx-auto" variants={fadeInUp}>
-            {language === "ru"
-              ? "ZERO 2 HERO — это инновационная платформа, которая помогает студентам и выпускникам начать успешную карьеру через качественные стажировки и работу в ведущих компаниях Узбекистана."
-              : language === "uz"
-                ? "ZERO 2 HERO — bu talabalar va bitiruvchilarga O'zbekistonning yetakchi kompaniyalarida sifatli stajirovka va ish orqali muvaffaqiyatli karyera boshlashga yordam beradigan innovatsion platforma."
-                : "ZERO 2 HERO is an innovative platform that helps students and graduates start successful careers through quality internships and work at leading companies in Uzbekistan."}
+            {t("aboutUsDescription")}
           </motion.p>
         </motion.div>
       </motion.section>
@@ -332,11 +288,7 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              {language === "ru"
-                ? "Что мы предлагаем"
-                : language === "uz"
-                  ? "Biz nima taklif qilamiz"
-                  : "What We Offer"}
+              {t("whatWeOffer")}
             </motion.h2>
             <motion.div
               className="grid md:grid-cols-3 gap-8"
@@ -348,43 +300,18 @@ export default function AboutPage() {
               {[
                 {
                   icon: Briefcase,
-                  title:
-                    language === "ru"
-                      ? "Оплачиваемые стажировки"
-                      : language === "uz"
-                        ? "To'lanadigan stajirovkalar"
-                        : "Paid Internships",
-                  description:
-                    language === "ru"
-                      ? "Доступ к эксклюзивным стажировкам в ведущих компаниях с возможностью трудоустройства"
-                      : language === "uz"
-                        ? "Ishga joylashish imkoniyati bilan yetakchi kompaniyalarda eksklyuziv stajirovkalarga kirish"
-                        : "Access to exclusive internships at leading companies with employment opportunities",
+                  title: t("paidInternshipsTitle"),
+                  description: t("paidInternshipsDesc"),
                 },
                 {
                   icon: BookOpen,
-                  title: language === "ru" ? "Бесплатные курсы" : language === "uz" ? "Bepul kurslar" : "Free Courses",
-                  description:
-                    language === "ru"
-                      ? "Профессиональные курсы по развитию карьерных навыков и подготовке к собеседованиям"
-                      : language === "uz"
-                        ? "Karyera ko'nikmalarini rivojlantirish va suhbatlarga tayyorgarlik bo'yicha professional kurslar"
-                        : "Professional courses on career skills development and interview preparation",
+                  title: t("freeCoursesTitle"),
+                  description: t("freeCoursesDesc"),
                 },
                 {
                   icon: TrendingUp,
-                  title:
-                    language === "ru"
-                      ? "Карьерная поддержка"
-                      : language === "uz"
-                        ? "Karyera yordami"
-                        : "Career Support",
-                  description:
-                    language === "ru"
-                      ? "Персональные консультации и помощь в построении успешной карьеры"
-                      : language === "uz"
-                        ? "Muvaffaqiyatli karyera qurishda shaxsiy maslahatlar va yordam"
-                        : "Personal consultations and assistance in building a successful career",
+                  title: t("careerSupportTitle"),
+                  description: t("careerSupportDesc"),
                 },
               ].map((offer, index) => (
                 <motion.div
@@ -414,7 +341,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {language === "ru" ? "Наша команда" : language === "uz" ? "Bizning jamoamiz" : "Our Team"}
+            {t("ourTeam")}
           </motion.h2>
           <motion.div
             className="grid md:grid-cols-3 gap-8"
@@ -453,25 +380,18 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
             >
-              {language === "ru"
-                ? "Готовы начать свою карьеру?"
-                : language === "uz"
-                  ? "Karyerangizni boshlashga tayyormisiz?"
-                  : "Ready to start your career?"}
+              {t("readyToStartCareer")}
             </motion.h2>
             <motion.p
               className="text-xl text-blue-100 mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.4 }}
             >
-              {language === "ru"
-                ? "Присоединяйтесь к тысячам студентов, которые уже нашли свою мечту"
-                : language === "uz"
-                  ? "O'z orzularini topgan minglab talabalar safiga qo'shiling"
-                  : "Join thousands of students who have already found their dream"}
+              {t("joinThousandsOfStudents")}
             </motion.p>
             <motion.button
               onClick={() => router.push("/registration")}
@@ -479,15 +399,11 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.6 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {language === "ru"
-                ? "Зарегистрироваться сейчас"
-                : language === "uz"
-                  ? "Hozir ro'yxatdan o'tish"
-                  : "Register Now"}
+              {t("registerNow")}
             </motion.button>
           </div>
         </div>

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { Briefcase, TrendingUp, Award, Users, ArrowRight } from "lucide-react"
+import { useRouter } from 'next/navigation'
+import { Briefcase, TrendingUp, Award, Users, ArrowRight } from 'lucide-react'
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
 
@@ -82,18 +82,10 @@ export default function JobSeekersPage() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div variants={fadeInUp} initial="initial" animate="animate">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              {language === "ru"
-                ? "Начните свою карьеру с ZERO 2 HERO"
-                : language === "uz"
-                  ? "ZERO 2 HERO bilan karyerangizni boshlang"
-                  : "Start Your Career with ZERO 2 HERO"}
+              {t("startYourCareerWithZero2Hero")}
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              {language === "ru"
-                ? "Получите оплачиваемую стажировку в ведущих компаниях и начните строить успешную карьеру уже сегодня"
-                : language === "uz"
-                  ? "Yetakchi kompaniyalarda oplanadigan stajirovka oling va bugun muvaffaqiyatli karyera qurishni boshlang"
-                  : "Get paid internships at leading companies and start building a successful career today"}
+              {t("getPaidInternshipsDescription")}
             </p>
             <motion.button
               onClick={() => router.push("/registration")}
@@ -124,48 +116,24 @@ export default function JobSeekersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Почему выбирают нас?"
-              : language === "uz"
-                ? "Nima uchun bizni tanlashadi?"
-                : "Why Choose Us?"}
+            {t("whyChooseUs")}
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: <TrendingUp size={48} />,
-                title: language === "ru" ? "Карьерный рост" : language === "uz" ? "Karyera o'sishi" : "Career Growth",
-                desc:
-                  language === "ru"
-                    ? "Оплачиваемые стажировки с возможностью трудоустройства"
-                    : language === "uz"
-                      ? "Ish bilan ta'minlash imkoniyati bilan oplanadigan stajirovkalar"
-                      : "Paid internships with employment opportunities",
+                title: t("careerGrowth"),
+                desc: t("paidInternshipsWithEmployment"),
               },
               {
                 icon: <Award size={48} />,
-                title: language === "ru" ? "Бесплатное обучение" : language === "uz" ? "Bepul ta'lim" : "Free Training",
-                desc:
-                  language === "ru"
-                    ? "Доступ к профессиональным курсам и материалам"
-                    : language === "uz"
-                      ? "Professional kurslar va materiallarga kirish"
-                      : "Access to professional courses and materials",
+                title: t("freeTraining"),
+                desc: t("accessToProfessionalCourses"),
               },
               {
                 icon: <Users size={48} />,
-                title:
-                  language === "ru"
-                    ? "Поддержка экспертов"
-                    : language === "uz"
-                      ? "Ekspertlar yordami"
-                      : "Expert Support",
-                desc:
-                  language === "ru"
-                    ? "Консультации и помощь на каждом этапе"
-                    : language === "uz"
-                      ? "Har bir bosqichda maslahat va yordam"
-                      : "Consultations and assistance at every stage",
+                title: t("expertSupport"),
+                desc: t("consultationsAtEveryStage"),
               },
             ].map((benefit, idx) => (
               <motion.div
@@ -195,50 +163,29 @@ export default function JobSeekersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru" ? "Как это работает?" : language === "uz" ? "Bu qanday ishlaydi?" : "How It Works?"}
+            {t("howItWorks")}
           </motion.h2>
           <div className="grid md:grid-cols-4 gap-6">
             {[
               {
                 step: "1",
-                title: language === "ru" ? "Регистрация" : language === "uz" ? "Ro'yxatdan o'tish" : "Registration",
-                desc:
-                  language === "ru"
-                    ? "Заполните профиль за 1 минуту"
-                    : language === "uz"
-                      ? "1 daqiqada profilni to'ldiring"
-                      : "Complete your profile in 1 minute",
+                title: t("registration"),
+                desc: t("completeProfileInOneMinute"),
               },
               {
                 step: "2",
-                title:
-                  language === "ru" ? "Подбор вакансий" : language === "uz" ? "Vakansiyalarni tanlash" : "Job Matching",
-                desc:
-                  language === "ru"
-                    ? "Получите предложения от компаний"
-                    : language === "uz"
-                      ? "Kompaniyalardan takliflar oling"
-                      : "Receive offers from companies",
+                title: t("jobMatching"),
+                desc: t("receiveOffersFromCompanies"),
               },
               {
                 step: "3",
-                title: language === "ru" ? "Обучение" : language === "uz" ? "Ta'lim" : "Training",
-                desc:
-                  language === "ru"
-                    ? "Пройдите бесплатные курсы"
-                    : language === "uz"
-                      ? "Bepul kurslarni o'ting"
-                      : "Take free courses",
+                title: t("training"),
+                desc: t("takeFreeCourses"),
               },
               {
                 step: "4",
-                title: language === "ru" ? "Стажировка" : language === "uz" ? "Stajirovka" : "Internship",
-                desc:
-                  language === "ru"
-                    ? "Начните работать и зарабатывать"
-                    : language === "uz"
-                      ? "Ishlashni va pul topishni boshlang"
-                      : "Start working and earning",
+                title: t("internship"),
+                desc: t("startWorkingAndEarning"),
               },
             ].map((item, idx) => (
               <motion.div
@@ -269,11 +216,7 @@ export default function JobSeekersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Готовы начать свою карьеру?"
-              : language === "uz"
-                ? "Karyerangizni boshlashga tayyormisiz?"
-                : "Ready to Start Your Career?"}
+            {t("readyToStartYourCareer")}
           </motion.h2>
           <motion.p
             className="text-xl text-blue-100 mb-8"
@@ -281,11 +224,7 @@ export default function JobSeekersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Присоединяйтесь к тысячам студентов, которые уже нашли работу мечты"
-              : language === "uz"
-                ? "Orzular ishini topgan minglab talabalarga qo'shiling"
-                : "Join thousands of students who have already found their dream job"}
+            {t("joinThousandsWhoFoundDreamJob")}
           </motion.p>
           <motion.button
             onClick={() => router.push("/registration")}

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { Building2, Users, Target, TrendingUp, ArrowRight } from "lucide-react"
+import { useRouter } from 'next/navigation'
+import { Building2, Users, Target, TrendingUp, ArrowRight } from 'lucide-react'
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
 
@@ -71,7 +71,7 @@ export default function EmployersPage() {
               className="bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all"
               whileHover={{ scale: 1.05 }}
             >
-              {language === "ru" ? "Разместить вакансию" : language === "uz" ? "Vakansiya joylashtirish" : "Post a Job"}
+              {t("postJob")}
             </motion.button>
           </div>
         </div>
@@ -82,25 +82,17 @@ export default function EmployersPage() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div variants={fadeInUp} initial="initial" animate="animate">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              {language === "ru"
-                ? "Найдите лучших кандидатов для вашей компании"
-                : language === "uz"
-                  ? "Kompaniyangiz uchun eng yaxshi nomzodlarni toping"
-                  : "Find the Best Candidates for Your Company"}
+              {t("findBestCandidates")}
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              {language === "ru"
-                ? "Доступ к базе талантливых студентов и выпускников, готовых начать карьеру в вашей компании"
-                : language === "uz"
-                  ? "Kompaniyangizda karyera boshlashga tayyor iqtidorli talabalar va bitiruvchilar bazasiga kirish"
-                  : "Access to a database of talented students and graduates ready to start their careers at your company"}
+              {t("accessToTalentedStudents")}
             </p>
             <motion.button
               onClick={() => router.push("/registration")}
               className="bg-primary hover:bg-blue-700 text-white rounded-xl px-8 py-4 font-semibold transition-all flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
             >
-              {language === "ru" ? "Начать поиск" : language === "uz" ? "Qidiruvni boshlash" : "Start Searching"}
+              {t("startSearching")}
               <ArrowRight size={20} />
             </motion.button>
           </motion.div>
@@ -124,48 +116,24 @@ export default function EmployersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Преимущества для работодателей"
-              : language === "uz"
-                ? "Ish beruvchilar uchun afzalliklar"
-                : "Benefits for Employers"}
+            {t("benefitsForEmployers")}
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: <Users size={48} />,
-                title:
-                  language === "ru"
-                    ? "Квалифицированные кандидаты"
-                    : language === "uz"
-                      ? "Malakali nomzodlar"
-                      : "Qualified Candidates",
-                desc:
-                  language === "ru"
-                    ? "Доступ к базе проверенных студентов и выпускников"
-                    : language === "uz"
-                      ? "Tekshirilgan talabalar va bitiruvchilar bazasiga kirish"
-                      : "Access to a database of verified students and graduates",
+                title: t("qualifiedCandidates"),
+                desc: t("accessToVerifiedStudents"),
               },
               {
                 icon: <Target size={48} />,
-                title: language === "ru" ? "Точный подбор" : language === "uz" ? "Aniq tanlash" : "Precise Matching",
-                desc:
-                  language === "ru"
-                    ? "Умный алгоритм подбора по вашим требованиям"
-                    : language === "uz"
-                      ? "Talablaringizga mos aqlli tanlash algoritmi"
-                      : "Smart matching algorithm based on your requirements",
+                title: t("preciseMatching"),
+                desc: t("smartMatchingAlgorithm"),
               },
               {
                 icon: <TrendingUp size={48} />,
-                title: language === "ru" ? "Экономия времени" : language === "uz" ? "Vaqtni tejash" : "Time Savings",
-                desc:
-                  language === "ru"
-                    ? "Быстрый поиск и найм сотрудников"
-                    : language === "uz"
-                      ? "Tez qidiruv va xodimlarni yollash"
-                      : "Fast search and hiring of employees",
+                title: t("timeSavings"),
+                desc: t("fastSearchAndHiring"),
               },
             ].map((benefit, idx) => (
               <motion.div
@@ -195,65 +163,29 @@ export default function EmployersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru" ? "Как это работает?" : language === "uz" ? "Bu qanday ishlaydi?" : "How It Works?"}
+            {t("howItWorks")}
           </motion.h2>
           <div className="grid md:grid-cols-4 gap-6">
             {[
               {
                 step: "1",
-                title:
-                  language === "ru"
-                    ? "Регистрация компании"
-                    : language === "uz"
-                      ? "Kompaniyani ro'yxatdan o'tkazish"
-                      : "Company Registration",
-                desc:
-                  language === "ru"
-                    ? "Создайте профиль компании"
-                    : language === "uz"
-                      ? "Kompaniya profilini yarating"
-                      : "Create a company profile",
+                title: t("companyRegistration"),
+                desc: t("createCompanyProfile"),
               },
               {
                 step: "2",
-                title:
-                  language === "ru"
-                    ? "Размещение вакансий"
-                    : language === "uz"
-                      ? "Vakansiyalarni joylashtirish"
-                      : "Post Vacancies",
-                desc:
-                  language === "ru"
-                    ? "Опубликуйте вакансии и требования"
-                    : language === "uz"
-                      ? "Vakansiyalar va talablarni e'lon qiling"
-                      : "Publish vacancies and requirements",
+                title: t("postVacancies"),
+                desc: t("publishVacanciesAndRequirements"),
               },
               {
                 step: "3",
-                title:
-                  language === "ru"
-                    ? "Получение откликов"
-                    : language === "uz"
-                      ? "Javoblarni olish"
-                      : "Receive Applications",
-                desc:
-                  language === "ru"
-                    ? "Просматривайте профили кандидатов"
-                    : language === "uz"
-                      ? "Nomzodlar profillarini ko'ring"
-                      : "Review candidate profiles",
+                title: t("receiveApplications"),
+                desc: t("reviewCandidateProfiles"),
               },
               {
                 step: "4",
-                title:
-                  language === "ru" ? "Найм сотрудников" : language === "uz" ? "Xodimlarni yollash" : "Hire Employees",
-                desc:
-                  language === "ru"
-                    ? "Выберите лучших кандидатов"
-                    : language === "uz"
-                      ? "Eng yaxshi nomzodlarni tanlang"
-                      : "Select the best candidates",
+                title: t("hireEmployees"),
+                desc: t("selectBestCandidates"),
               },
             ].map((item, idx) => (
               <motion.div
@@ -282,30 +214,15 @@ export default function EmployersPage() {
             {[
               {
                 number: "500+",
-                label:
-                  language === "ru"
-                    ? "Компаний-партнеров"
-                    : language === "uz"
-                      ? "Hamkor kompaniyalar"
-                      : "Partner Companies",
+                label: t("partnerCompanies"),
               },
               {
                 number: "10,000+",
-                label:
-                  language === "ru"
-                    ? "Активных кандидатов"
-                    : language === "uz"
-                      ? "Faol nomzodlar"
-                      : "Active Candidates",
+                label: t("activeCandidates"),
               },
               {
                 number: "95%",
-                label:
-                  language === "ru"
-                    ? "Успешных трудоустройств"
-                    : language === "uz"
-                      ? "Muvaffaqiyatli ishga joylashtirish"
-                      : "Successful Placements",
+                label: t("successfulPlacements"),
               },
             ].map((stat, idx) => (
               <motion.div
@@ -332,11 +249,7 @@ export default function EmployersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Готовы найти лучших сотрудников?"
-              : language === "uz"
-                ? "Eng yaxshi xodimlarni topishga tayyormisiz?"
-                : "Ready to Find the Best Employees?"}
+            {t("readyToFindBestEmployees")}
           </motion.h2>
           <motion.p
             className="text-xl text-blue-100 mb-8"
@@ -344,18 +257,14 @@ export default function EmployersPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {language === "ru"
-              ? "Присоединяйтесь к сотням компаний, которые уже нашли талантливых сотрудников через нашу платформу"
-              : language === "uz"
-                ? "Platformamiz orqali iqtidorli xodimlarni topgan yuzlab kompaniyalarga qo'shiling"
-                : "Join hundreds of companies that have already found talented employees through our platform"}
+            {t("joinHundredsOfCompanies")}
           </motion.p>
           <motion.button
             onClick={() => router.push("/registration")}
             className="bg-white text-primary hover:bg-gray-100 rounded-xl px-8 py-4 font-semibold transition-all"
             whileHover={{ scale: 1.05 }}
           >
-            {language === "ru" ? "Начать сейчас" : language === "uz" ? "Hozir boshlash" : "Start Now"}
+            {t("startNow")}
           </motion.button>
         </div>
       </section>

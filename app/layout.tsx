@@ -1,7 +1,5 @@
 import type React from "react"
-import { Inter } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import { QueryProvider } from "@/lib/query-client"
+import { Inter } from 'next/font/google'
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -14,8 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`} style={{ backgroundColor: "#F9FAFB" }}>
-        <QueryProvider>{children}</QueryProvider>
-        <Analytics />
+        {children}
       </body>
     </html>
   )

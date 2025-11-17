@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation'
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
 import { User, Briefcase, BookOpen, LogOut, Edit, Award, TrendingUp, Menu, X, Upload, Plus, Trash2, Video, Download } from 'lucide-react'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -144,7 +142,7 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Загрузка профиля...</p>
+          <p className="text-gray-600">{t("loadingProfile")}</p>
         </div>
       </div>
     )
@@ -237,175 +235,193 @@ export default function ProfilePage() {
     setUserData({ ...userData, workExperience: updated })
   }
 
-  const handleExportPDF = async () => {
-    const cvContent = document.createElement('div')
-    cvContent.style.cssText = `
-      width: 210mm;
-      height: 297mm;
-      background: white;
-      font-family: 'Arial', sans-serif;
-      position: absolute;
-      left: -9999px;
-      top: 0;
-      box-sizing: border-box;
-    `
-    
-    cvContent.innerHTML = `
-      <div style="font-family: Arial, sans-serif; color: #1a1a1a; height: 100%; display: flex; flex-direction: column;">
-        <!-- Primary blue header bar with logo -->
-        <div style="background: #2563eb; height: 8mm; width: 100%; display: flex; align-items: center; padding: 0 20mm;">
-          <div style="color: white; font-weight: bold; font-size: 16px; letter-spacing: 1px;">ZERO 2 HERO</div>
-        </div>
-        
-        <div style="display: flex; padding: 15mm 20mm; flex: 1;">
-          <!-- Left Sidebar (1/3 width) -->
-          <div style="width: 33%; padding-right: 15mm;">
-            <!-- Profile Photo with primary blue border -->
-            <div style="margin-bottom: 20mm;">
-              <div style="width: 90px; height: 90px; border: 4px solid #2563eb; border-radius: 50%; overflow: hidden; margin: 0 auto; background: #f0f0f0;">
-                ${userData.profilePhoto ? `<img src="${userData.profilePhoto}" style="width: 100%; height: 100%; object-fit: cover;" />` : ''}
-              </div>
-            </div>
-            
-            <!-- Contacts Section -->
-            <div style="margin-bottom: 25px;">
-              <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 12px; letter-spacing: 1px;">КОНТАКТЫ</h3>
-              ${userData.phone ? `<p style="margin: 8px 0; font-size: 11px; color: #2563eb;">📞 ${userData.phone}</p>` : ''}
-              ${userData.email ? `<p style="margin: 8px 0; font-size: 11px; color: #555; word-break: break-all;">✉ ${userData.email}</p>` : ''}
-              ${userData.city ? `<p style="margin: 8px 0; font-size: 11px;">📍 ${userData.city}</p>` : ''}
-              ${userData.socialLinks.facebook ? `<p style="margin: 8px 0; font-size: 11px;">f ${userData.socialLinks.facebook}</p>` : ''}
-              ${userData.socialLinks.instagram ? `<p style="margin: 8px 0; font-size: 11px; color: #2563eb;">📷 ${userData.socialLinks.instagram}</p>` : ''}
-            </div>
-            
-            <!-- About Section -->
-            ${userData.age || userData.aboutDescription ? `
-            <div style="margin-bottom: 25px;">
-              <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 12px; letter-spacing: 1px;">О СЕБЕ</h3>
-              ${userData.age ? `<p style="margin: 8px 0; font-size: 11px;">Возраст: ${userData.age}</p>` : ''}
-              ${userData.aboutDescription ? `<p style="margin: 8px 0; font-size: 11px; color: #555;">${userData.aboutDescription}</p>` : ''}
-            </div>
-            ` : ''}
-            
-            <!-- Languages -->
-            ${userData.languageSkills && userData.languageSkills.length > 0 ? `
-            <div style="margin-bottom: 25px;">
-              <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 12px; letter-spacing: 1px;">ЯЗЫКИ</h3>
-              ${userData.languageSkills.map((lang: any) => `
-                <div style="margin-bottom: 12px;">
-                  <p style="font-size: 11px; font-weight: bold; margin-bottom: 4px;">/ ${lang.language.toUpperCase()}</p>
-                  <div style="background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
-                    <div style="background: #2563eb; width: ${lang.level}%; height: 100%;"></div>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-            ` : ''}
-            
-            <!-- Skills -->
-            ${userData.technicalSkills && userData.technicalSkills.length > 0 ? `
-            <div style="margin-bottom: 25px;">
-              <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 12px; letter-spacing: 1px;">НАВЫКИ</h3>
-              ${userData.technicalSkills.map((skill: any) => `
-                <div style="margin-bottom: 15px;">
-                  <p style="font-size: 11px; font-weight: bold; margin-bottom: 2px;">/ ${skill.name.toUpperCase()}</p>
-                  ${skill.description ? `<p style="font-size: 9px; color: #555; margin-bottom: 6px; line-height: 1.3;">${skill.description}</p>` : ''}
-                  <div style="background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
-                    <div style="background: #2563eb; width: ${skill.proficiency}%; height: 100%;"></div>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-            ` : ''}
-          </div>
-          
-          <!-- Right Content (2/3 width) with Timeline -->
-          <div style="flex: 1; position: relative; padding-left: 40px; border-left: 3px solid #333;">
-            <!-- Name and Title at Top -->
-            <div style="margin-bottom: 25px; margin-top: -5mm;">
-              <h1 style="font-size: 32px; font-weight: bold; margin: 0; letter-spacing: 2px;">${userData.firstName ? userData.firstName.toUpperCase() : ''} ${userData.lastName ? userData.lastName.toUpperCase() : ''}</h1>
-              <p style="font-size: 12px; margin: 8px 0 0 0; letter-spacing: 1px;"><span style="font-weight: bold;">ЖЕЛАЕМАЯ ДОЛЖНОСТЬ:</span> ${userData.desiredPosition || 'Не указано'}</p>
-            </div>
-            <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0 25px 0;" />
-            
-            <!-- Education Section with Icon -->
-            ${userData.education && userData.education.length > 0 ? `
-            <div style="position: relative; margin-bottom: 30px;">
-              <div style="position: absolute; left: -55px; top: 5px; width: 35px; height: 35px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">📚</div>
-              <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px;">ОБРАЗОВАНИЕ</h2>
-              ${userData.education.map((edu: any) => `
-                <div style="margin-bottom: 18px; padding-left: 15px; border-left: 3px solid #2563eb;">
-                  <p style="font-size: 10px; color: #2563eb; font-weight: bold; margin: 0 0 5px 0;">${edu.years}</p>
-                  <p style="font-size: 13px; font-weight: bold; margin: 0 0 3px 0;">${edu.institution}</p>
-                  <p style="font-size: 10px; color: #555; margin: 0;">${edu.degree}. ${edu.specialty}</p>
-                </div>
-              `).join('')}
-            </div>
-            ` : ''}
-            
-            <!-- Work Experience Section with Icon -->
-            ${userData.workExperience && userData.workExperience.length > 0 ? `
-            <div style="position: relative; margin-bottom: 30px;">
-              <div style="position: absolute; left: -55px; top: 5px; width: 35px; height: 35px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">💼</div>
-              <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px;">ОПЫТ РАБОТЫ</h2>
-              ${userData.workExperience.map((exp: any) => `
-                <div style="margin-bottom: 20px; padding-left: 15px; border-left: 3px solid #2563eb;">
-                  <p style="font-size: 10px; color: #2563eb; font-weight: bold; margin: 0 0 5px 0;">${exp.period}</p>
-                  <p style="font-size: 13px; font-weight: bold; margin: 0 0 3px 0;">${exp.company}</p>
-                  <p style="font-size: 11px; font-style: italic; margin: 0 0 8px 0;">${exp.position}</p>
-                  ${exp.achievements.filter((a: string) => a).map((achievement: string) => `
-                    <p style="font-size: 10px; margin: 3px 0; padding-left: 10px; color: #333; line-height: 1.4;">- ${achievement}</p>
-                  `).join('')}
-                </div>
-              `).join('')}
-            </div>
-            ` : ''}
-            
-            <!-- Achievements Section with Icon -->
-            ${userData.achievements && userData.achievements.length > 0 ? `
-            <div style="position: relative;">
-              <div style="position: absolute; left: -55px; top: 5px; width: 35px; height: 35px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🚀</div>
-              <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px;">ДОСТИЖЕНИЯ</h2>
-              ${userData.achievements.map((achievement: any) => `
-                <div style="margin-bottom: 15px; padding-left: 15px; border-left: 3px solid #2563eb;">
-                  <p style="font-size: 10px; color: #2563eb; font-weight: bold; margin: 0 0 5px 0;">${achievement.year}</p>
-                  <p style="font-size: 12px; font-weight: bold; margin: 0 0 5px 0;">${achievement.title}</p>
-                  ${achievement.description ? `<p style="font-size: 10px; color: #555; margin: 0; line-height: 1.4;">${achievement.description}</p>` : ''}
-                </div>
-              `).join('')}
-            </div>
-            ` : ''}
-          </div>
-        </div>
-      </div>
-    `
-    
-    document.body.appendChild(cvContent)
-    
-    try {
-      const canvas = await html2canvas(cvContent, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      })
-      
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      })
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-      pdf.save(`CV_${userData.firstName}_${userData.lastName}.pdf`)
-    } finally {
-      document.body.removeChild(cvContent)
-    }
-  }
+  const handleDownloadPDF = () => {
+    // Open a new window with a clean CV layout
+    const printWindow = window.open('', '_blank')
+    if (!printWindow) return
 
+    const cvHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>${userData.firstName} ${userData.lastName} - CV</title>
+        <style>
+          @page { margin: 0; }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { 
+            font-family: Arial, sans-serif; 
+            padding: 40px;
+            font-size: 12px;
+            line-height: 1.5;
+          }
+          .header {
+            border-bottom: 4px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+          }
+          .name { 
+            font-size: 32px; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            margin-bottom: 5px;
+          }
+          .position { 
+            font-size: 14px; 
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+          .logo {
+            color: #2563eb;
+            font-size: 16px;
+            font-weight: bold;
+          }
+          .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+          }
+          .sidebar h3, .main h3 {
+            color: #2563eb;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 15px;
+            font-size: 14px;
+          }
+          .sidebar h3:first-child, .main h3:first-child {
+            margin-top: 0;
+          }
+          .sidebar p {
+            margin-bottom: 5px;
+          }
+          .skill {
+            margin-bottom: 10px;
+          }
+          .skill-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+          }
+          .skill-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+          }
+          .skill-fill {
+            background: #2563eb;
+            height: 100%;
+          }
+          .timeline-item {
+            border-left: 2px solid #2563eb;
+            padding-left: 15px;
+            margin-bottom: 15px;
+          }
+          .timeline-year {
+            color: #2563eb;
+            font-weight: bold;
+            margin-bottom: 3px;
+          }
+          .timeline-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">ZERO 2 HERO</div>
+          <div class="name">${userData.firstName} ${userData.lastName}</div>
+          <div class="position">${userData.desiredPosition}</div>
+        </div>
+
+        <div class="container">
+          <div class="sidebar">
+            <h3>КОНТАКТЫ</h3>
+            <p>${userData.phone}</p>
+            <p>${userData.email}</p>
+            <p>${userData.city}</p>
+            ${userData.socialLinks.instagram ? `<p>${userData.socialLinks.instagram}</p>` : ''}
+            ${userData.socialLinks.telegram ? `<p>${userData.socialLinks.telegram}</p>` : ''}
+
+            ${userData.age ? `<h3>О СЕБЕ</h3><p>Возраст: ${userData.age}</p>` : ''}
+            ${userData.aboutDescription ? `<p>${userData.aboutDescription}</p>` : ''}
+
+            ${userData.languageSkills?.length > 0 ? `
+              <h3>ЯЗЫКИ</h3>
+              ${userData.languageSkills.map(lang => `
+                <div style="margin-bottom: 10px;">
+                  <p style="font-weight: bold;">${lang.language}</p>
+                  <p style="color: #2563eb; font-weight: bold;">${lang.level}</p>
+                </div>
+              `).join('')}
+            ` : ''}
+
+            ${userData.technicalSkills?.length > 0 ? `
+              <h3>НАВЫКИ</h3>
+              ${userData.technicalSkills.map(skill => `
+                <div class="skill">
+                  <div class="skill-name">${skill.name}</div>
+                  ${skill.description ? `<p style="font-size: 10px; color: #666;">${skill.description}</p>` : ''}
+                  <div class="skill-bar">
+                    <div class="skill-fill" style="width: ${skill.proficiency}%"></div>
+                  </div>
+                </div>
+              `).join('')}
+            ` : ''}
+          </div>
+
+          <div class="main">
+            ${userData.education?.length > 0 ? `
+              <h3>📚 ОБРАЗОВАНИЕ</h3>
+              ${userData.education.map(edu => `
+                <div class="timeline-item">
+                  <div class="timeline-year">${edu.years}</div>
+                  <div class="timeline-title">${edu.institution}</div>
+                  <p>${edu.degree} - ${edu.specialty}</p>
+                </div>
+              `).join('')}
+            ` : ''}
+
+            ${userData.workExperience?.length > 0 ? `
+              <h3>💼 ОПЫТ РАБОТЫ</h3>
+              ${userData.workExperience.map(exp => `
+                <div class="timeline-item">
+                  <div class="timeline-year">${exp.period}</div>
+                  <div class="timeline-title">${exp.company}</div>
+                  <p>${exp.position}</p>
+                  ${exp.achievements?.length > 0 ? `
+                    <ul style="margin-left: 15px; margin-top: 5px;">
+                      ${exp.achievements.map(ach => ach ? `<li>${ach}</li>` : '').join('')}
+                    </ul>
+                  ` : ''}
+                </div>
+              `).join('')}
+            ` : ''}
+
+            ${userData.achievements?.length > 0 ? `
+              <h3>🚀 ДОСТИЖЕНИЯ</h3>
+              ${userData.achievements.map(ach => `
+                <div class="timeline-item">
+                  <div class="timeline-year">${ach.year}</div>
+                  <div class="timeline-title">${ach.title}</div>
+                  <p>${ach.description}</p>
+                </div>
+              `).join('')}
+            ` : ''}
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+
+    printWindow.document.write(cvHTML)
+    printWindow.document.close()
+    
+    // Trigger print dialog after a short delay to ensure content is loaded
+    setTimeout(() => {
+      printWindow.print()
+    }, 250)
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -523,7 +539,7 @@ export default function ProfilePage() {
                 {isEditing && (
                   <button className="flex items-center gap-2 bg-white text-primary hover:bg-blue-50 rounded-xl px-4 py-2 transition-all text-sm">
                     <Upload size={16} />
-                    Загрузить фото
+                    {t("uploadPhoto")}
                   </button>
                 )}
                 
@@ -535,28 +551,28 @@ export default function ProfilePage() {
                         value={userData.firstName}
                         onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg text-white text-xl font-bold bg-white/20 placeholder-white/70"
-                        placeholder="Имя"
+                        placeholder={t("firstName")}
                       />
                       <input
                         type="text"
                         value={userData.lastName}
                         onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg text-white text-xl font-bold bg-white/20 placeholder-white/70"
-                        placeholder="Фамилия"
+                        placeholder={t("lastName")}
                       />
                       <input
                         type="text"
                         value={userData.desiredPosition}
                         onChange={(e) => setUserData({ ...userData, desiredPosition: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg text-white bg-white/20 placeholder-white/70"
-                        placeholder="Желаемая должность"
+                        placeholder={t("desiredPosition")}
                       />
                       <input
                         type="text"
                         value={userData.profileVideo}
                         onChange={(e) => setUserData({ ...userData, profileVideo: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg text-white text-sm bg-white/20 placeholder-white/70"
-                        placeholder="URL видео (необязательно)"
+                        placeholder={t("videoUrlOptional")}
                       />
                     </div>
                   ) : (
@@ -576,15 +592,15 @@ export default function ProfilePage() {
                   {!isEditing && (
                     <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center mt-4">
                       <div className="bg-white/20 rounded-lg px-4 py-2">
-                        <p className="text-sm text-blue-100">Профиль заполнен</p>
+                        <p className="text-sm text-blue-100">{t("profileCompleted")}</p>
                         <p className="text-2xl font-bold">85%</p>
                       </div>
                       <div className="bg-white/20 rounded-lg px-4 py-2">
-                        <p className="text-sm text-blue-100">Просмотров</p>
+                        <p className="text-sm text-blue-100">{t("views")}</p>
                         <p className="text-2xl font-bold">124</p>
                       </div>
                       <div className="bg-white/20 rounded-lg px-4 py-2">
-                        <p className="text-sm text-blue-100">Откликов</p>
+                        <p className="text-sm text-blue-100">{t("responses")}</p>
                         <p className="text-2xl font-bold">8</p>
                       </div>
                     </div>
@@ -592,23 +608,22 @@ export default function ProfilePage() {
                 </div>
                 
                 <div className="flex gap-3 w-full sm:w-auto">
-                  {!isEditing && (
-                    <motion.button
-                      onClick={handleExportPDF}
-                      className="flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 rounded-xl px-4 sm:px-6 py-2 sm:py-3 transition-all font-semibold text-sm sm:text-base flex-1 sm:flex-initial justify-center"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <Download size={18} className="sm:w-5 sm:h-5" />
-                      Скачать PDF
-                    </motion.button>
-                  )}
                   <motion.button
-                    onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
+                    onClick={handleDownloadPDF}
+                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 sm:px-6 py-2 sm:py-3 transition-all font-semibold text-sm sm:text-base flex-1 sm:flex-initial justify-center"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <Download size={18} className="sm:w-5 sm:h-5" />
+                    {t("downloadPDF")}
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={() => router.push("/profile/edit")}
                     className="flex items-center gap-2 bg-white text-primary hover:bg-blue-50 rounded-xl px-4 sm:px-6 py-2 sm:py-3 transition-all font-semibold text-sm sm:text-base flex-1 sm:flex-initial justify-center"
                     whileHover={{ scale: 1.05 }}
                   >
                     <Edit size={18} className="sm:w-5 sm:h-5" />
-                    {isEditing ? "Сохранить" : "Редактировать"}
+                    {t("editProfile")}
                   </motion.button>
                 </div>
               </div>
@@ -617,10 +632,10 @@ export default function ProfilePage() {
 
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-4">Контактная информация</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-4">{t("contactInfo")}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Телефон</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("phone")} *</label>
                   <input
                     type="tel"
                     value={userData.phone}
@@ -629,7 +644,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("email")} *</label>
                   <input
                     type="email"
                     value={userData.email}
@@ -638,7 +653,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Город</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("city")} *</label>
                   <input
                     type="text"
                     value={userData.city}
@@ -647,7 +662,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Facebook (необязательно)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("facebook")} ({t("optional")})</label>
                   <input
                     type="text"
                     value={userData.socialLinks.facebook}
@@ -661,7 +676,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Instagram (необязательно)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("instagram")} ({t("optional")})</label>
                   <input
                     type="text"
                     value={userData.socialLinks.instagram}
@@ -676,7 +691,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Telegram (необязательно)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("telegram")} ({t("optional")})</label>
                   <input
                     type="text"
                     value={userData.socialLinks.telegram}
@@ -690,7 +705,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn (необязательно)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("linkedin")} ({t("optional")})</label>
                   <input
                     type="text"
                     value={userData.socialLinks.linkedin}
@@ -709,10 +724,10 @@ export default function ProfilePage() {
 
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-4">О себе</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-4">{t("aboutMe")}</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Возраст</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t("age")}</label>
                   <input
                     type="number"
                     value={userData.age}
@@ -722,14 +737,14 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Краткое описание (необязательно)
+                    {t("shortDescription")} ({t("optional")})
                   </label>
                   <textarea
                     value={userData.aboutDescription}
                     onChange={(e) => setUserData({ ...userData, aboutDescription: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     rows={3}
-                    placeholder="Расскажите о себе..."
+                    placeholder={t("aboutYouPlaceholder")}
                   />
                 </div>
               </div>
@@ -739,13 +754,13 @@ export default function ProfilePage() {
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-foreground">Языки</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("languages")}</h2>
                 <button
                   onClick={addLanguageSkill}
                   className="flex items-center gap-2 bg-primary text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-all"
                 >
                   <Plus size={16} />
-                  Добавить
+                  {t("add")}
                 </button>
               </div>
               <div className="space-y-4">
@@ -761,7 +776,7 @@ export default function ProfilePage() {
                           setUserData({ ...userData, languageSkills: updated })
                         }}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                        placeholder="Название языка"
+                        placeholder={t("languageName")}
                       />
                       <button
                         onClick={() => removeLanguageSkill(index)}
@@ -772,7 +787,7 @@ export default function ProfilePage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Уровень владения: {lang.level}%
+                        {t("proficiencyLevel")}: {lang.level}%
                       </label>
                       <input
                         type="range"
@@ -796,13 +811,13 @@ export default function ProfilePage() {
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-foreground">Навыки</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("skills")}</h2>
                 <button
                   onClick={addTechnicalSkill}
                   className="flex items-center gap-2 bg-primary text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-all"
                 >
                   <Plus size={16} />
-                  Добавить
+                  {t("add")}
                 </button>
               </div>
               <div className="space-y-4">
@@ -819,7 +834,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, technicalSkills: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Название навыка"
+                          placeholder={t("skillName")}
                         />
                         <textarea
                           value={skill.description}
@@ -829,7 +844,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, technicalSkills: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Краткое описание (140 символов)"
+                          placeholder={t("skillDescriptionPlaceholder")}
                           maxLength={140}
                           rows={2}
                         />
@@ -840,7 +855,7 @@ export default function ProfilePage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Уровень владения: {skill.proficiency}%
+                        {t("proficiencyLevel")}: {skill.proficiency}%
                       </label>
                       <input
                         type="range"
@@ -864,13 +879,13 @@ export default function ProfilePage() {
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-foreground">Образование</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("education")}</h2>
                 <button
                   onClick={addEducation}
                   className="flex items-center gap-2 bg-primary text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-all"
                 >
                   <Plus size={16} />
-                  Добавить
+                  {t("add")}
                 </button>
               </div>
               <div className="space-y-4">
@@ -887,7 +902,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, education: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Годы обучения (например, 2019-2023)"
+                          placeholder={t("educationYears")}
                         />
                         <input
                           type="text"
@@ -898,7 +913,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, education: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Учебное заведение"
+                          placeholder={t("institution")}
                         />
                         <input
                           type="text"
@@ -909,7 +924,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, education: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Степень (Бакалавр, Магистр и т.д.)"
+                          placeholder={t("degree")}
                         />
                         <input
                           type="text"
@@ -920,7 +935,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, education: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Специальность"
+                          placeholder={t("specialty")}
                         />
                       </div>
                       <button onClick={() => removeEducation(index)} className="ml-2 text-red-600 hover:text-red-800">
@@ -936,13 +951,13 @@ export default function ProfilePage() {
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-foreground">Опыт работы</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("workExperience")}</h2>
                 <button
                   onClick={addWorkExperience}
                   className="flex items-center gap-2 bg-primary text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-all"
                 >
                   <Plus size={16} />
-                  Добавить
+                  {t("add")}
                 </button>
               </div>
               <div className="space-y-4">
@@ -959,7 +974,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, workExperience: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Период (например, 2022-настоящее время)"
+                          placeholder={t("workPeriod")}
                         />
                         <input
                           type="text"
@@ -970,7 +985,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, workExperience: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Компания"
+                          placeholder={t("company")}
                         />
                         <input
                           type="text"
@@ -981,11 +996,11 @@ export default function ProfilePage() {
                             setUserData({ ...userData, workExperience: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Должность"
+                          placeholder={t("position")}
                         />
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Список достижений (3-5 пунктов)
+                            {t("achievementsList")} (3-5 {t("points")})
                           </label>
                           {exp.achievements.map((achievement: string, achIndex: number) => (
                             <div key={achIndex} className="flex gap-2 mb-2">
@@ -998,7 +1013,7 @@ export default function ProfilePage() {
                                   setUserData({ ...userData, workExperience: updated })
                                 }}
                                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
-                                placeholder="Достижение"
+                                placeholder={t("achievement")}
                               />
                               <button
                                 onClick={() => removeAchievementPoint(index, achIndex)}
@@ -1013,7 +1028,7 @@ export default function ProfilePage() {
                             className="text-primary hover:text-blue-700 text-sm flex items-center gap-1"
                           >
                             <Plus size={16} />
-                            Добавить достижение
+                            {t("addAchievement")}
                           </button>
                         </div>
                       </div>
@@ -1030,13 +1045,13 @@ export default function ProfilePage() {
           {isEditing && (
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-foreground">Достижения</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("achievements")}</h2>
                 <button
                   onClick={addAchievement}
                   className="flex items-center gap-2 bg-primary text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-all"
                 >
                   <Plus size={16} />
-                  Добавить
+                  {t("add")}
                 </button>
               </div>
               <div className="space-y-4">
@@ -1053,7 +1068,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, achievements: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Год"
+                          placeholder={t("year")}
                         />
                         <input
                           type="text"
@@ -1064,7 +1079,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, achievements: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Название конкурса/проекта"
+                          placeholder={t("achievementTitle")}
                         />
                         <textarea
                           value={achievement.description}
@@ -1074,7 +1089,7 @@ export default function ProfilePage() {
                             setUserData({ ...userData, achievements: updated })
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="Краткое описание"
+                          placeholder={t("achievementDescription")}
                           rows={2}
                         />
                       </div>
@@ -1097,7 +1112,7 @@ export default function ProfilePage() {
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                       <User size={20} className="text-primary" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground">Личная информация</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-foreground">{t("personalInfo")}</h3>
                   </div>
 
                   <div className="space-y-3 sm:space-y-4">
@@ -1111,7 +1126,7 @@ export default function ProfilePage() {
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{t("email")}</p>
                       <p className="font-semibold text-foreground text-sm sm:text-base break-all">
-                        {userData.email || "Не указан"}
+                        {userData.email || t("notSpecified")}
                       </p>
                     </div>
 
@@ -1128,7 +1143,7 @@ export default function ProfilePage() {
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                       <BookOpen size={20} className="text-green-600" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground">Образование</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-foreground">{t("education")}</h3>
                   </div>
 
                   <div className="space-y-3 sm:space-y-4">
@@ -1139,13 +1154,13 @@ export default function ProfilePage() {
 
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{t("course")}</p>
-                      <p className="font-semibold text-foreground text-sm sm:text-base">{userData.course} курс</p>
+                      <p className="font-semibold text-foreground text-sm sm:text-base">{userData.course} {t("year")}</p>
                     </div>
 
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{t("languages")}</p>
                       <p className="font-semibold text-foreground text-sm sm:text-base">
-                        {userData.languages?.join(", ") || "Не указаны"}
+                        {userData.languages?.join(", ") || t("notSpecifiedPlural")}
                       </p>
                     </div>
                   </div>
@@ -1157,7 +1172,7 @@ export default function ProfilePage() {
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                       <Briefcase size={20} className="text-purple-600" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground">Карьера</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-foreground">{t("career")}</h3>
                   </div>
 
                   <div className="space-y-3 sm:space-y-4">
@@ -1169,14 +1184,14 @@ export default function ProfilePage() {
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{t("experience")}</p>
                       <p className="font-semibold text-foreground text-sm sm:text-base">
-                        {userData.experience || "Не указан"}
+                        {userData.experience || t("notSpecified")}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{t("skills")}</p>
                       <p className="font-semibold text-foreground text-sm sm:text-base">
-                        {userData.skills || "Не указаны"}
+                        {userData.skills || t("notSpecifiedPlural")}
                       </p>
                     </div>
                   </div>
@@ -1192,8 +1207,8 @@ export default function ProfilePage() {
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4">
                     <Briefcase size={24} />
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-2">Вакансии</h3>
-                  <p className="text-blue-100 text-sm">Найдите работу мечты</p>
+                  <h3 className="font-bold text-lg sm:text-xl mb-2">{t("vacancies")}</h3>
+                  <p className="text-blue-100 text-sm">{t("findDreamJob")}</p>
                   <p className="text-2xl sm:text-3xl font-bold mt-4">156</p>
                 </motion.div>
 
@@ -1205,8 +1220,8 @@ export default function ProfilePage() {
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4">
                     <BookOpen size={24} />
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-2">Курсы</h3>
-                  <p className="text-green-100 text-sm">Бесплатное обучение</p>
+                  <h3 className="font-bold text-lg sm:text-xl mb-2">{t("courses")}</h3>
+                  <p className="text-green-100 text-sm">{t("freeTraining")}</p>
                   <p className="text-2xl sm:text-3xl font-bold mt-4">24</p>
                 </motion.div>
 
@@ -1217,8 +1232,8 @@ export default function ProfilePage() {
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4">
                     <Award size={24} />
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-2">Достижения</h3>
-                  <p className="text-purple-100 text-sm">Ваши успехи</p>
+                  <h3 className="font-bold text-lg sm:text-xl mb-2">{t("achievements")}</h3>
+                  <p className="text-purple-100 text-sm">{t("yourSuccess")}</p>
                   <p className="text-2xl sm:text-3xl font-bold mt-4">12</p>
                 </motion.div>
 
@@ -1229,8 +1244,8 @@ export default function ProfilePage() {
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4">
                     <TrendingUp size={24} />
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-2">Прогресс</h3>
-                  <p className="text-orange-100 text-sm">Ваш рост</p>
+                  <h3 className="font-bold text-lg sm:text-xl mb-2">{t("progress")}</h3>
+                  <p className="text-orange-100 text-sm">{t("yourGrowth")}</p>
                   <p className="text-2xl sm:text-3xl font-bold mt-4">+45%</p>
                 </motion.div>
               </div>

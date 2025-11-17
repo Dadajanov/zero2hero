@@ -1,0 +1,11 @@
+export const login = {
+  loginTitle: "Kirish",
+  enterPhoneNumber: "Telefon raqamingizni kiriting",
+  loginWithCode: "Kod bilan kirish",
+  verificationCodeSent: "Tasdiqlash kodi yuborildi",
+  enterVerificationCode: "Tasdiqlash kodini kiriting",
+  invalidCode: "Noto'g'ri tasdiqlash kodi",
+  loginSuccess: "Kirish muvaffaqiyatli!",
+  loginFailed: "Kirishda xatolik. Iltimos, qayta urinib ko'ring.",
+  password: "Parol",
+} as const
