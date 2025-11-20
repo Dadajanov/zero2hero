@@ -1,32 +1,12 @@
 "use client"
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import { LogOut, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { motion } from "framer-motion"
 import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "./language-switcher"
-import ScrollSection from "./scroll-section" // Import ScrollSection component
+import ScrollSection from "./scroll-section"
 import MobileMenu from "./mobile-menu"
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
-}
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-}
-
-const scaleHover = {
-  whileHover: { scale: 1.05 },
-  transition: { duration: 0.3 },
-}
 
 export default function HomePage() {
   const router = useRouter()
@@ -118,26 +98,21 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header/Navbar */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-50 bg-white shadow-md"
-      >
+      <header className="sticky top-0 z-50 bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <motion.div className="text-2xl font-bold text-primary cursor-pointer" onClick={() => router.push("/")}>
+          <div className="text-2xl font-bold text-primary cursor-pointer" onClick={() => router.push("/")}>
             ZERO 2 HERO
-          </motion.div>
+          </div>
 
           <nav className="hidden lg:flex gap-8">
             {navItems.map((item) => (
-              <motion.a
+              <a
                 key={item.label}
                 href={item.href}
-                className="font-semibold text-foreground hover:text-primary transition-colors whitespace-nowrap"
-                whileHover={{ scale: 1.05 }}
+                className="font-semibold text-foreground hover:text-primary transition-colors whitespace-nowrap hover:scale-105"
               >
                 {item.label}
-              </motion.a>
+              </a>
             ))}
           </nav>
 
@@ -145,31 +120,28 @@ export default function HomePage() {
             <LanguageSwitcher />
             {isAuthenticated ? (
               <>
-                <motion.button
+                <button
                   onClick={() => router.push("/profile")}
-                  className="flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-5 py-3 transition-all whitespace-nowrap"
-                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-5 py-3 transition-all whitespace-nowrap hover:scale-105"
                 >
                   <User size={20} />
                   {t("profile")}
-                </motion.button>
-                <motion.button
+                </button>
+                <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-3 transition-all whitespace-nowrap"
-                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-3 transition-all whitespace-nowrap hover:scale-105"
                 >
                   <LogOut size={20} />
                   {t("logout")}
-                </motion.button>
+                </button>
               </>
             ) : (
-              <motion.button
+              <button
                 onClick={() => router.push("/login")}
-                className="bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all whitespace-nowrap"
-                whileHover={{ scale: 1.05 }}
+                className="bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all whitespace-nowrap hover:scale-105"
               >
                 {t("login")}
-              </motion.button>
+              </button>
             )}
           </div>
 
@@ -178,62 +150,64 @@ export default function HomePage() {
             <MobileMenu navItems={navItems} actionButtons={mobileActionButtons} />
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Hero Section */}
-      <motion.section
-        initial="initial"
-        animate="animate"
-        variants={staggerContainer}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20"
-      >
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <motion.div variants={fadeInUp}>
-            <motion.h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 uppercase" variants={fadeInUp}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 uppercase">
               {t("homeTitle")}
-            </motion.h1>
-            <motion.p className="text-xl text-gray-600 mb-8" variants={fadeInUp}>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8">
               {t("homeSubtitle")}
-            </motion.p>
+            </p>
 
-            <motion.div className="space-y-4 mb-8" variants={fadeInUp}>
-              {[t("feature1"), t("feature2"), t("feature3")].map((feature) => (
-                <motion.div key={feature} className="flex items-center gap-3" variants={fadeInUp}>
+            <div className="space-y-4 mb-8">
+              {[t("feature1"), t("feature2"), t("feature3")].map((feature, index) => (
+                <motion.div
+                  key={feature}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="flex items-center gap-3"
+                >
                   <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                     <span className="text-white text-sm">✓</span>
                   </div>
                   <span className="text-lg text-foreground">{feature}</span>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
 
-            <motion.div className="flex gap-4" variants={fadeInUp}>
-              <motion.button
-                className="bg-primary hover:bg-blue-700 text-white rounded-xl px-8 py-4 font-semibold transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <div className="flex gap-4">
+              <button
+                className="bg-primary hover:bg-blue-700 text-white rounded-xl px-8 py-4 font-semibold transition-all hover:scale-105"
               >
                 {t("findJob")}
-              </motion.button>
-              <motion.button
+              </button>
+              <button
                 onClick={() => router.push("/video")}
-                className="border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-8 py-4 font-semibold transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-8 py-4 font-semibold transition-all hover:scale-105"
               >
                 {t("watchVideo")}
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           </motion.div>
 
-          <motion.div variants={fadeInUp} className="relative">
-            <motion.div
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div
               key={currentImageIndex}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
-              className="w-full h-96 rounded-2xl overflow-hidden shadow-2xl relative"
+              className="w-full h-96 rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500"
             >
               <img
                 src={heroImages[currentImageIndex] || "/placeholder.svg"}
@@ -263,7 +237,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
             {/* Image indicators */}
             <div className="flex justify-center gap-2 mt-4">
               {heroImages.map((_, index) => (
@@ -278,19 +252,13 @@ export default function HomePage() {
             </div>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Job Offers Section */}
       <ScrollSection>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <motion.h2 className="text-4xl font-bold text-foreground mb-12 uppercase">{t("currentVacancies")}</motion.h2>
-          <motion.div
-            className="grid md:grid-cols-3 lg:grid-cols-4 gap-6"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
+          <h2 className="text-4xl font-bold text-foreground mb-12 uppercase">{t("currentVacancies")}</h2>
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
             {[
               { title: t("administrator"), salary: "8 000 000 UZS", vacancies: 500 },
               { title: t("programmer"), salary: "10 000 000 UZS", vacancies: 700 },
@@ -304,33 +272,30 @@ export default function HomePage() {
               { title: t("translator"), salary: "6 000 000 UZS", vacancies: 150 },
               { title: t("engineer"), salary: "12 000 000 UZS", vacancies: 550 },
               { title: t("architect"), salary: "13 000 000 UZS", vacancies: 180 },
-            ].map((job) => (
+            ].map((job, index) => (
               <motion.div
                 key={job.title}
-                className="bg-white rounded-2xl shadow-md hover:shadow-lg p-6 transition-all"
-                variants={fadeInUp}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-lg p-6 transition-all"
               >
                 <h3 className="text-xl font-bold text-foreground mb-2">{job.title}</h3>
                 <p className="text-primary font-semibold mb-2">{job.salary}</p>
                 <p className="text-gray-600">{job.vacancies} {t("vacancies")}</p>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </ScrollSection>
 
       {/* Courses Section */}
       <ScrollSection>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <motion.h2 className="text-4xl font-bold text-foreground mb-12 uppercase">{t("skillUp")}</motion.h2>
-          <motion.div
-            className="grid md:grid-cols-3 gap-6"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
+          <h2 className="text-4xl font-bold text-foreground mb-12 uppercase">{t("skillUp")}</h2>
+          <div className="grid md:grid-cols-3 gap-6">
             {[
               { id: 1, title: "Web Development", image: "/web-development-course.jpg" },
               { id: 2, title: "Data Science", image: "/data-science-course.jpg" },
@@ -338,12 +303,15 @@ export default function HomePage() {
               { id: 4, title: "UI/UX Design", image: "/ui-ux-design-course.jpg" },
               { id: 5, title: "Mobile Development", image: "/mobile-development-course.jpg" },
               { id: 6, title: "Business Analytics", image: "/business-analytics-course.jpg" },
-            ].map((course) => (
+            ].map((course, index) => (
               <motion.div
                 key={course.id}
-                className="bg-white rounded-2xl shadow-md hover:shadow-lg overflow-hidden"
-                variants={fadeInUp}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-lg overflow-hidden transition-all"
               >
                 <div className="h-40 relative overflow-hidden">
                   <img
@@ -357,21 +325,15 @@ export default function HomePage() {
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </ScrollSection>
 
       {/* Partner Companies Section */}
       <ScrollSection>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <motion.h2 className="text-4xl font-bold text-foreground mb-12 uppercase">{t("companies")}</motion.h2>
-          <motion.div
-            className="grid md:grid-cols-4 gap-8"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
+          <h2 className="text-4xl font-bold text-foreground mb-12 uppercase">{t("companies")}</h2>
+          <div className="grid md:grid-cols-4 gap-8">
             {[
               { id: 1, name: "Google", logo: "/google-logo.jpg" },
               { id: 2, name: "Microsoft", logo: "/microsoft-logo.jpg" },
@@ -381,12 +343,15 @@ export default function HomePage() {
               { id: 6, name: "Tesla", logo: "/tesla-logo.jpg" },
               { id: 7, name: "Netflix", logo: "/netflix-logo.jpg" },
               { id: 8, name: "Samsung", logo: "/samsung-logo.jpg" },
-            ].map((company) => (
+            ].map((company, index) => (
               <motion.div
                 key={company.id}
-                className="bg-white rounded-2xl shadow-md hover:shadow-lg p-6 flex items-center justify-center"
-                variants={fadeInUp}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-lg p-6 flex items-center justify-center transition-all"
               >
                 <img
                   src={company.logo || "/placeholder.svg"}
@@ -395,50 +360,64 @@ export default function HomePage() {
                 />
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </ScrollSection>
 
       {/* About Us Section */}
       <ScrollSection>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <motion.h2 className="text-4xl font-bold text-foreground mb-12 uppercase text-center">{t("about")}</motion.h2>
+          <h2 className="text-4xl font-bold text-foreground mb-12 uppercase text-center">{t("about")}</h2>
           <motion.div
-            className="bg-white rounded-2xl shadow-lg p-8 md:p-12"
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="animate"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-2xl shadow-lg p-8 md:p-12"
           >
             <p className="text-lg text-gray-700 leading-relaxed mb-6">{t("aboutText")}</p>
             <div className="grid md:grid-cols-3 gap-6 mt-8">
-              <div className="text-center p-6 bg-blue-50 rounded-xl">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="text-center p-6 bg-blue-50 rounded-xl"
+              >
                 <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
                 <p className="text-gray-600">{t("studentsFoundJobs")}</p>
-              </div>
-              <div className="text-center p-6 bg-green-50 rounded-xl">
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="text-center p-6 bg-green-50 rounded-xl"
+              >
                 <div className="text-4xl font-bold text-green-600 mb-2">500+</div>
                 <p className="text-gray-600">{t("partnerCompanies")}</p>
-              </div>
-              <div className="text-center p-6 bg-purple-50 rounded-xl">
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="text-center p-6 bg-purple-50 rounded-xl"
+              >
                 <div className="text-4xl font-bold text-purple-600 mb-2">50+</div>
                 <p className="text-gray-600">{t("freeCourses")}</p>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
       </ScrollSection>
 
       {/* Footer */}
-      <motion.footer
-        className="bg-white border-t border-border py-8 mt-auto"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
+      <footer className="bg-white border-t border-border py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-500 text-sm">{t("footer")}</p>
         </div>
-      </motion.footer>
+      </footer>
     </div>
   )
 }

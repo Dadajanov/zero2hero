@@ -1,68 +1,35 @@
+import { setAuthTokensConfig } from "@/helpers/authentication-manager"
 import { axiosInstance } from "@/lib/api"
-
-export interface StudentRegistrationRequest {
-  name: string
-  phoneNumber: string
-  purpose: "internship" | "work" | "internship_work"
-  status: "applicant" | "student" | "graduate"
-  universityCourse: number
-  universityId: number
-}
-
-export interface StudentRegistrationResponse {
-  id: number
-  name: string
-  phoneNumber: string
-  [key: string]: any
-}
-
-export interface SendVerificationCodeRequest {
-  phoneNumber: string
-}
-
-export interface SendVerificationCodeResponse {
-  success: boolean
-  message?: string
-}
-
-export interface LoginRequest {
-  phoneNumber: string
-}
-
-export interface LoginVerifyRequest {
-  phoneNumber: string
-  code: string
-}
-
-export interface LoginResponse {
-  success: boolean
-  token?: string
-  user?: {
-    id: number
-    name: string
-    phoneNumber: string
-  }
-  message?: string
-}
+import { ApiResponse, LoginRequest, LoginResponse, LoginVerifyRequest, SendVerificationCodeRequest, SendVerificationCodeResponse, StudentRegistrationRequest, StudentRegistrationResponse } from "../types/auth-api"
 
 export class AuthApi {
-  static async registerStudent(data: StudentRegistrationRequest): Promise<StudentRegistrationResponse> {
-    const response = await axiosInstance.post<StudentRegistrationResponse>("/auth/students/sign-up", data)
-    return response.data
+  static async registerStudent(params: StudentRegistrationRequest): Promise<StudentRegistrationResponse> {
+    const { data } = await axiosInstance.post<ApiResponse<StudentRegistrationResponse>>("/auth/students/sign-up", params)
+    return data.data
   }
 
-  static async sendVerificationCode(data: SendVerificationCodeRequest): Promise<SendVerificationCodeResponse> {
-    const response = await axiosInstance.post<SendVerificationCodeResponse>("/auth/send-code", data)
-    return response.data
+  static async sendVerificationCode(params: SendVerificationCodeRequest): Promise<SendVerificationCodeResponse> {
+    const { data } = await axiosInstance.post<ApiResponse<SendVerificationCodeResponse>>("/auth/send-code", params)
+    return data.data
   }
 
-  static async loginSendCode(data: LoginRequest): Promise<SendVerificationCodeResponse> {
-    const response = await axiosInstance.post<SendVerificationCodeResponse>("/auth/students/login", data)
-    return response.data
+  static async loginSendCode(params: LoginRequest): Promise<SendVerificationCodeResponse> {
+    const { data } = await axiosInstance.post<ApiResponse<SendVerificationCodeResponse>>("/auth/students/login", params)
+    return data.data
   }
 
-  static async loginVerifyCode(data: LoginVerifyRequest): Promise<LoginResponse> {
-    const response = await axiosInstance.post<LoginResponse>("/auth/students/confitm-otp", data)
-    return response.data
+  static async loginVerifyCode(params: LoginVerifyRequest): Promise<LoginResponse> {
+    const { data } = await axiosInstance.post<ApiResponse<LoginResponse>>("/auth/students/confirm-otp", params)
+    const response = data.data
+
+    if (response.jwt) {
+      setAuthTokensConfig({
+        token: response.jwt.accessToken,
+        refreshToken: response.jwt.refreshToken,
+        expireAt: response.jwt.expiresAt
+      })
+    }
+
+    return response
   }
 }

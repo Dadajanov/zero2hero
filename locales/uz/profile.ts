@@ -73,4 +73,10 @@ export const profile = {
   lastNamePlaceholder: "FAMILIYA",
   skillPlaceholder: "Ko'nikma",
   achievementTitlePlaceholder: "Yutuq",
+  languageLevel_A1: "A1 - Boshlang'ich",
+  languageLevel_A2: "A2 - Elementar",
+  languageLevel_B1: "B1 - O'rta",
+  languageLevel_B2: "B2 - O'rtadan yuqori",
+  languageLevel_C1: "C1 - Ilg'or",
+  languageLevel_C2: "C2 - Professional",
 } as const

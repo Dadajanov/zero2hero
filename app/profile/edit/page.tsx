@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from 'next/navigation'
-import { getTranslation, type Language } from "@/lib/translations"
 import LanguageSwitcher from "@/components/language-switcher"
-import { User, Upload, Plus, Trash2, Check, ChevronLeft, LogOut, Menu, X, Download } from 'lucide-react'
+import { getTranslation, type Language } from "@/lib/translations"
+import { Check, ChevronLeft, LogOut, Menu, Plus, Trash2, Upload, User, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from "react"
 
 const demoUserData = {
   firstName: "",
@@ -16,13 +16,13 @@ const demoUserData = {
   phone: "",
   city: "",
   socialLinks: { facebook: "", instagram: "", telegram: "", linkedin: "" },
-  age: 0,
+  age: "",
   aboutDescription: "",
-  languageSkills: [],
-  technicalSkills: [],
-  education: [],
-  workExperience: [],
-  achievements: [],
+  languageSkills: [] as Array<{ language: string; level: string }>,
+  technicalSkills: [] as Array<{ name: string; description: string; proficiency: number }>,
+  education: [] as Array<{ years: string; institution: string; degree: string; specialty: string }>,
+  workExperience: [] as Array<{ period: string; company: string; position: string; achievements: string[] }>,
+  achievements: [] as Array<{ year: string; title: string; description: string }>,
 }
 
 export default function ProfileEditPage() {
@@ -57,7 +57,7 @@ export default function ProfileEditPage() {
   const handleSaveSection = (sectionName: string) => {
     localStorage.setItem("registrationData", JSON.stringify(userData))
     setSavedSections({ ...savedSections, [sectionName]: true })
-    
+
     // Show saved indicator for 2 seconds
     setTimeout(() => {
       setSavedSections((prev) => ({ ...prev, [sectionName]: false }))
@@ -248,7 +248,7 @@ export default function ProfileEditPage() {
                   <label className="block text-sm font-medium mb-2">{t("instagram")}</label>
                   <input
                     type="text"
-                    value={userData.socialLinks.instagram}
+                    value={userData.socialLinks?.instagram || ""}
                     onChange={(e) =>
                       setUserData({ ...userData, socialLinks: { ...userData.socialLinks, instagram: e.target.value } })
                     }
@@ -261,7 +261,7 @@ export default function ProfileEditPage() {
                   <label className="block text-sm font-medium mb-2">{t("telegram")}</label>
                   <input
                     type="text"
-                    value={userData.socialLinks.telegram}
+                    value={userData.socialLinks?.telegram || ""}
                     onChange={(e) =>
                       setUserData({ ...userData, socialLinks: { ...userData.socialLinks, telegram: e.target.value } })
                     }
@@ -274,7 +274,7 @@ export default function ProfileEditPage() {
                   <label className="block text-sm font-medium mb-2">{t("linkedin")}</label>
                   <input
                     type="text"
-                    value={userData.socialLinks.linkedin}
+                    value={userData.socialLinks?.linkedin || ""}
                     onChange={(e) =>
                       setUserData({ ...userData, socialLinks: { ...userData.socialLinks, linkedin: e.target.value } })
                     }
@@ -301,9 +301,9 @@ export default function ProfileEditPage() {
                 <div>
                   <label className="block text-sm font-medium mb-2">{t("age")}</label>
                   <input
-                    type="number"
-                    value={userData.age}
-                    onChange={(e) => setUserData({ ...userData, age: parseInt(e.target.value) || 0 })}
+                    type="text"
+                    value={userData.age || ""}
+                    onChange={(e) => setUserData({ ...userData, age: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
@@ -311,7 +311,7 @@ export default function ProfileEditPage() {
                 <div>
                   <label className="block text-sm font-medium mb-2">{t("shortDescription")}</label>
                   <textarea
-                    value={userData.aboutDescription}
+                    value={userData.aboutDescription || ""}
                     onChange={(e) => setUserData({ ...userData, aboutDescription: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg"
                     rows={5}
@@ -354,7 +354,7 @@ export default function ProfileEditPage() {
                       <input
                         type="text"
                         placeholder={t("languagePlaceholder")}
-                        value={lang.language}
+                        value={lang.language || ""}
                         onChange={(e) => {
                           const updated = [...userData.languageSkills]
                           updated[idx].language = e.target.value
@@ -373,7 +373,7 @@ export default function ProfileEditPage() {
                     </div>
                     <label className="block text-sm text-gray-600 mb-2">{t("proficiencyLevel")}</label>
                     <select
-                      value={lang.level}
+                      value={lang.level || "A1"}
                       onChange={(e) => {
                         const updated = [...userData.languageSkills]
                         updated[idx].level = e.target.value
@@ -427,7 +427,7 @@ export default function ProfileEditPage() {
                         <input
                           type="text"
                           placeholder={t("skillNamePlaceholder")}
-                          value={skill.name}
+                          value={skill.name || ""}
                           onChange={(e) => {
                             const updated = [...userData.technicalSkills]
                             updated[idx].name = e.target.value
@@ -437,7 +437,7 @@ export default function ProfileEditPage() {
                         />
                         <textarea
                           placeholder={t("descriptionPlaceholder")}
-                          value={skill.description}
+                          value={skill.description || ""}
                           onChange={(e) => {
                             const updated = [...userData.technicalSkills]
                             updated[idx].description = e.target.value
@@ -460,12 +460,12 @@ export default function ProfileEditPage() {
                         <Trash2 size={20} />
                       </button>
                     </div>
-                    <label className="block text-sm text-gray-600 mb-2">{t("levelLabel")}: {skill.proficiency}%</label>
+                    <label className="block text-sm text-gray-600 mb-2">{t("levelLabel")}: {skill.proficiency || 0}%</label>
                     <input
                       type="range"
                       min="0"
                       max="100"
-                      value={skill.proficiency}
+                      value={skill.proficiency || 0}
                       onChange={(e) => {
                         const updated = [...userData.technicalSkills]
                         updated[idx].proficiency = parseInt(e.target.value)
@@ -510,7 +510,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("yearsPlaceholder")}
-                      value={edu.years}
+                      value={edu.years || ""}
                       onChange={(e) => {
                         const updated = [...userData.education]
                         updated[idx].years = e.target.value
@@ -521,7 +521,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("institutionPlaceholder")}
-                      value={edu.institution}
+                      value={edu.institution || ""}
                       onChange={(e) => {
                         const updated = [...userData.education]
                         updated[idx].institution = e.target.value
@@ -532,7 +532,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("degreePlaceholder")}
-                      value={edu.degree}
+                      value={edu.degree || ""}
                       onChange={(e) => {
                         const updated = [...userData.education]
                         updated[idx].degree = e.target.value
@@ -543,7 +543,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("specialtyPlaceholder")}
-                      value={edu.specialty}
+                      value={edu.specialty || ""}
                       onChange={(e) => {
                         const updated = [...userData.education]
                         updated[idx].specialty = e.target.value
@@ -598,7 +598,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("periodPlaceholder")}
-                      value={exp.period}
+                      value={exp.period || ""}
                       onChange={(e) => {
                         const updated = [...userData.workExperience]
                         updated[idx].period = e.target.value
@@ -609,7 +609,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("companyPlaceholder")}
-                      value={exp.company}
+                      value={exp.company || ""}
                       onChange={(e) => {
                         const updated = [...userData.workExperience]
                         updated[idx].company = e.target.value
@@ -620,7 +620,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("positionPlaceholder")}
-                      value={exp.position}
+                      value={exp.position || ""}
                       onChange={(e) => {
                         const updated = [...userData.workExperience]
                         updated[idx].position = e.target.value
@@ -674,7 +674,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("yearPlaceholder")}
-                      value={ach.year}
+                      value={ach.year || ""}
                       onChange={(e) => {
                         const updated = [...userData.achievements]
                         updated[idx].year = e.target.value
@@ -685,7 +685,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       placeholder={t("achievementTitle")}
-                      value={ach.title}
+                      value={ach.title || ""}
                       onChange={(e) => {
                         const updated = [...userData.achievements]
                         updated[idx].title = e.target.value
@@ -695,7 +695,7 @@ export default function ProfileEditPage() {
                     />
                     <textarea
                       placeholder={t("achievementDescription")}
-                      value={ach.description}
+                      value={ach.description || ""}
                       onChange={(e) => {
                         const updated = [...userData.achievements]
                         updated[idx].description = e.target.value
@@ -725,7 +725,7 @@ export default function ProfileEditPage() {
                 <h3 className="font-bold mb-2">{t("cvPreview")}</h3>
                 <p className="text-sm text-gray-600">{t("realTimeChanges")}</p>
               </div>
-              
+
               {/* Mini CV Preview */}
               <div className="bg-white rounded-lg shadow-lg p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
                 {/* Header */}
@@ -831,6 +831,13 @@ export default function ProfileEditPage() {
                             <p className="text-primary font-bold">{exp.period}</p>
                             <p className="font-bold">{exp.company || t("companyPlaceholder")}</p>
                             <p>{exp.position || t("positionPlaceholder")}</p>
+                            {exp.achievements.length > 0 && (
+                              <ul className="list-disc pl-6">
+                                {exp.achievements.map((achievement, achIdx) => (
+                                  <li key={achIdx}>{achievement}</li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -839,14 +846,14 @@ export default function ProfileEditPage() {
                     {userData.achievements.length > 0 && (
                       <div>
                         <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
-                          <span className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-lg">🚀</span>
+                          <span className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-lg">🏆</span>
                           {t("achievements").toUpperCase()}
                         </h3>
                         {userData.achievements.map((ach, idx) => (
                           <div key={idx} className="border-l-2 border-primary pl-4 mb-3">
                             <p className="text-primary font-bold">{ach.year}</p>
-                            <p className="font-bold">{ach.title || t("achievementTitlePlaceholder")}</p>
-                            <p>{ach.description}</p>
+                            <p className="font-bold">{ach.title || t("achievementTitle")}</p>
+                            <p>{ach.description || t("achievementDescription")}</p>
                           </div>
                         ))}
                       </div>

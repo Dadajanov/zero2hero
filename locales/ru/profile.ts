@@ -73,4 +73,10 @@ export const profile = {
   lastNamePlaceholder: "ФАМИЛИЯ",
   skillPlaceholder: "Навык",
   achievementTitlePlaceholder: "Достижение",
+  languageLevel_A1: "A1 - Начальный",
+  languageLevel_A2: "A2 - Элементарный",
+  languageLevel_B1: "B1 - Средний",
+  languageLevel_B2: "B2 - Выше среднего",
+  languageLevel_C1: "C1 - Продвинутый",
+  languageLevel_C2: "C2 - Профессиональный",
 } as const

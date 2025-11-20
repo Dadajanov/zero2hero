@@ -1,7 +1,10 @@
 "use client"
 
+import { AuthApi } from "@/api/domains/auth-api"
+import { UserApi } from "@/api/domains/user.api"
 import LanguageSwitcher from "@/components/language-switcher"
 import { getTranslation, type Language } from "@/lib/translations"
+import { useUserStore } from "@/stores/user-store"
 import { useRouter } from 'next/navigation'
 import type React from "react"
 import { useEffect, useState } from "react"
@@ -9,9 +12,11 @@ import { PatternFormat } from "react-number-format"
 
 export default function LoginPage() {
   const router = useRouter()
+  const setUser = useUserStore((state) => state.setUser)
   const [language, setLanguage] = useState<Language>("ru")
   const [phone, setPhone] = useState("")
   const [code, setCode] = useState("")
+  const [sessionId, setSessionId] = useState("")
   const [step, setStep] = useState<"phone" | "code">("phone")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -54,9 +59,12 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // await AuthApi.loginSendCode({ phoneNumber: cleanPhone })
+      const data = await AuthApi.loginSendCode({ phoneNumber: cleanPhone });
+      const currentTime = Math.round(new Date().getTime() / 1000)
+
       setStep("code")
-      setTimer(60)
+      setTimer(data.sessionExpiresAt - currentTime)
+      setSessionId(data.sessionId)
       setError("")
     } catch (err: any) {
       console.error("[v0] Login send code error:", err)
@@ -80,27 +88,22 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const cleanPhone = formatPhoneForAPI(phone)
-      // const response = await AuthApi.loginVerifyCode({
-      //   phoneNumber: cleanPhone,
-      //   code,
-      // })
+      const response = await AuthApi.loginVerifyCode({
+        sessionId: sessionId,
+        otpCode: code,
+      })
 
-      if (true) {
-        // if (response.token) {
-        //   localStorage.setItem("authToken", response.token)
-        // }
-        // if (response.user) {
-        //   localStorage.setItem("userData", JSON.stringify(response.user))
-        // }
+      if (response) {
+        const userData = await UserApi.fetchUserData()
+        setUser(userData)
+
         localStorage.setItem("isAuthenticated", "true")
 
         router.push("/profile")
       } else {
-        // setError(response.message || t("loginFailed"))
+        setError(response || t("loginFailed"))
       }
     } catch (err: any) {
-      console.error("[v0] Login verify code error:", err)
       const errorMessage =
         err.response?.data?.message || err.response?.data?.error || err.message || t("loginFailed")
       setError(errorMessage)

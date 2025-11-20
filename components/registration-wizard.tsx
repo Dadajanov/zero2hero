@@ -12,11 +12,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { translations, type Language } from "@/lib/translations"
 import { useUniversitiesList, useStudentRegistration } from "@/hooks/use-registration"
 import { AuthApi } from "@/api/domains/auth-api"
+import { useUserStore } from "@/stores/user-store"
 
 const GREETING_VIDEO_URL = "/videos/greeting.mp4" // Replace with your video URL
 
 export function RegistrationWizard() {
   const router = useRouter()
+  const setUser = useUserStore((state) => state.setUser)
   const [currentStep, setCurrentStep] = useState(0)
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
     if (typeof window !== "undefined") {
@@ -222,7 +224,17 @@ export function RegistrationWizard() {
     registrationMutation.mutate(registrationData, {
       onSuccess: (data) => {
         console.log("[v0] Registration successful:", data)
-        localStorage.setItem("registrationData", JSON.stringify(data))
+        setUser({
+          id: data.id,
+          name: data.name,
+          phoneNumber: data.phoneNumber,
+          purpose: formData.registrationGoal,
+          status: formData.userStatus,
+          universityCourse: Number.parseInt(formData.course),
+          universityId: formData.universityId,
+          ...data
+        })
+        localStorage.setItem("isAuthenticated", "true")
         router.push("/profile")
       },
       onError: (error) => {

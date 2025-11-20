@@ -1,4 +1,8 @@
-import axios, { type AxiosResponse, type AxiosError, type InternalAxiosRequestConfig } from "axios"
+import { applyHeadersRequestInterceptor } from "@/helpers/headers-request-interceptor";
+import { applyJWTResponseInterceptor } from "@/helpers/jwt-interceptor";
+import { applyUnauthenticatedResponseInterceptor } from "@/helpers/unauthorized-response-interceptor";
+import axios, { type AxiosError, type AxiosResponse } from "axios";
+import queryString from 'query-string';
 
 // ----------------------------------------------------------------------
 
@@ -19,32 +23,12 @@ declare module "axios" {
 // Request Interceptor
 // ----------------------------------------------------------------------
 
-const headersRequestInterceptor = async (
-  requestConfig: InternalAxiosRequestConfig,
-): Promise<InternalAxiosRequestConfig> => {
-  // Get language from localStorage
-  const language = typeof window !== "undefined" ? localStorage.getItem("language") || "en" : "en"
-
-  // Set headers for the registration API
-  requestConfig.headers["X-Tenant-ID"] = "1"
-  requestConfig.headers["X-Device-ID"] = "InnTouch"
-  requestConfig.headers["x-innTouch-app-language"] = language
-
-  console.log("[v0] Request URL:", requestConfig.baseURL + requestConfig.url)
-  console.log("[v0] Request headers:", requestConfig.headers)
-
-  return requestConfig
-}
 
 // ----------------------------------------------------------------------
 // Response Interceptor
 // ----------------------------------------------------------------------
 
 const extractResponse = (response: AxiosResponse) => {
-  console.log("[v0] Response interceptor - full response:", response)
-  console.log("[v0] Response interceptor - data:", response.data)
-  console.log("[v0] Response interceptor - status:", response.status)
-
   if (!!response.config.shouldReturnOriginalResponse) {
     return response
   }
@@ -56,15 +40,10 @@ const extractResponse = (response: AxiosResponse) => {
   }
 
   // If data is not an object (e.g., HTML string), keep original response
-  console.warn("[v0] Response data is not an object:", typeof response.data)
   return response
 }
 
 const extractErrorResponse = async (error: AxiosError) => {
-  console.error("[v0] API Error:", error)
-  console.error("[v0] Error response:", error.response)
-  console.error("[v0] Error response data:", error.response?.data)
-  console.error("[v0] Error status:", error.response?.status)
 
   // Don't transform error responses, just log and reject
   return Promise.reject(error)
@@ -77,15 +56,17 @@ const extractErrorResponse = async (error: AxiosError) => {
 export const httpClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30 * 1000,
-  withCredentials: true,
+  paramsSerializer: params => queryString.stringify(params, { arrayFormat: 'bracket' }),
 })
 
-// Apply request interceptor
-httpClient.interceptors.request.use(headersRequestInterceptor)
+applyHeadersRequestInterceptor(httpClient)
 
-// Apply response interceptor
-;(httpClient.defaults as any).shouldReturnOriginalResponse = false
+  // Apply response interceptor
+  ; (httpClient.defaults as any).shouldReturnOriginalResponse = false
 httpClient.interceptors.response.use(extractResponse, extractErrorResponse)
+
+applyJWTResponseInterceptor(httpClient)
+applyUnauthenticatedResponseInterceptor(httpClient)
 
 // ----------------------------------------------------------------------
 // API Types
@@ -156,4 +137,5 @@ export const api = {
 }
 
 // Export httpClient for custom requests
-export { httpClient as axiosInstance }
+export { httpClient as axiosInstance };
+
