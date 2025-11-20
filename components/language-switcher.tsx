@@ -1,10 +1,10 @@
 "use client"
 
-import type { Language } from "@/lib/translations"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
+export type Language = 'ru' | 'uz' | 'en'
 const languages = [
   { code: "ru" as Language, flag: "🇷🇺", name: "russian" },
   { code: "uz" as Language, flag: "🇺🇿", name: "uzbek" },

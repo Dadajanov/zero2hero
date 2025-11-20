@@ -1,23 +1,25 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
-import { PatternFormat } from "react-number-format"
+import { AuthApi } from "@/api/domains/auth-api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { translations, type Language } from "@/lib/translations"
-import { useUniversitiesList, useStudentRegistration } from "@/hooks/use-registration"
-import { AuthApi } from "@/api/domains/auth-api"
-import { useUserStore } from "@/stores/user-store"
 import { setAccountId } from "@/helpers/authentication-manager"
+import { useStudentRegistration, useUniversitiesList } from "@/hooks/use-registration"
+import { useUserStore } from "@/stores/user-store"
+import { AnimatePresence, motion } from "framer-motion"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { PatternFormat } from "react-number-format"
+import { Language } from "./language-switcher"
 
 const GREETING_VIDEO_URL = "/videos/greeting.mp4" // Replace with your video URL
 
 export function RegistrationWizard() {
+  const { i18n, t } = useTranslation(['registration', 'common'])
   const router = useRouter()
   const setUser = useUserStore((state) => state.setUser)
   const [currentStep, setCurrentStep] = useState(0)
@@ -74,8 +76,6 @@ export function RegistrationWizard() {
   const [showUniversityDropdown, setShowUniversityDropdown] = useState(false)
   const { universities = [], isLoading: universitiesLoading } = useUniversitiesList()
   const registrationMutation = useStudentRegistration()
-
-  const t = (key: keyof (typeof translations)["ru"]) => translations[selectedLanguage][key]
 
   const totalSteps = 7
 
@@ -271,11 +271,10 @@ export function RegistrationWizard() {
                 <button
                   key={lang}
                   onClick={() => handleLanguageSelect(lang)}
-                  className={`py-3 px-4 rounded-lg font-semibold transition-all ${
-                    selectedLanguage === lang
-                      ? "bg-blue-600 text-white shadow-lg scale-105"
-                      : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
-                  }`}
+                  className={`py-3 px-4 rounded-lg font-semibold transition-all ${selectedLanguage === lang
+                    ? "bg-blue-600 text-white shadow-lg scale-105"
+                    : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                    }`}
                 >
                   {lang.toUpperCase()}
                 </button>
@@ -504,9 +503,8 @@ export function RegistrationWizard() {
                   }}
                   placeholder="+998(XX)-XXX-XX- XX"
                   disabled={formData.isPhoneVerified}
-                  className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                    !isPhoneValid() && formData.phone.length > 0 ? "border-red-500" : ""
-                  }`}
+                  className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${!isPhoneValid() && formData.phone.length > 0 ? "border-red-500" : ""
+                    }`}
                 />
                 {!isPhoneValid() && formData.phone.length > 0 && (
                   <p className="text-sm text-red-500 mt-1">{t("phoneValidation")}</p>
@@ -647,10 +645,10 @@ export function RegistrationWizard() {
 
         <div className="flex justify-between mt-8">
           <Button onClick={handleBack} disabled={currentStep === 0} variant="outline">
-            {t("back")}
+            {t("back", { ns: "common" })}
           </Button>
           <Button onClick={handleNext} disabled={registrationMutation.isPending || !canProceed()}>
-            {currentStep === totalSteps - 1 ? t("register") : t("next")}
+            {t(currentStep === totalSteps - 1 ? "register" : "next", { ns: 'common' })}
           </Button>
         </div>
       </motion.div>

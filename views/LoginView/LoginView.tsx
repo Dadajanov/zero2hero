@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import { PatternFormat } from "react-number-format"
 
 export default function LoginView() {
-  const { t } = useTranslation('profile')
+  const { t } = useTranslation(['login', 'common'])
 
   const router = useRouter()
   const setUser = useUserStore((state) => state.setUser)
@@ -210,9 +210,9 @@ export default function LoginView() {
             )}
 
             <p className="text-center text-gray-700 mt-4">
-              {t("noAccount")}{" "}
+              {t("noAccount", { ns: 'common' })}{" "}
               <a href="/registration" className="text-blue-600 font-semibold hover:underline">
-                {t("register")}
+                {t("register", { ns: 'common ' })}
               </a>
             </p>
           </div>
