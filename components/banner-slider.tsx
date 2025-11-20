@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { getTranslation } from "@/lib/translations"
+import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 const bannerImages = [
   {
@@ -27,7 +27,7 @@ const bannerImages = [
 ]
 
 export default function BannerSlider({ language }: { language: "en" | "ru" | "uz" }) {
-  const t = getTranslation(language)
+  const { t } = useTranslation('home')
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const bannerImages = [
@@ -124,9 +124,8 @@ export default function BannerSlider({ language }: { language: "en" | "ru" | "uz
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              index === currentSlide ? "bg-white w-8" : "bg-white bg-opacity-50"
-            }`}
+            className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? "bg-white w-8" : "bg-white bg-opacity-50"
+              }`}
           />
         ))}
       </div>

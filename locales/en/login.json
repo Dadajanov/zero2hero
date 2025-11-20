@@ -1,0 +1,11 @@
+{
+  "loginTitle": "Login",
+  "enterPhoneNumber": "Enter your phone number",
+  "loginWithCode": "Login with code",
+  "verificationCodeSent": "Verification code sent",
+  "enterVerificationCode": "Enter the verification code",
+  "invalidCode": "Invalid verification code",
+  "loginSuccess": "Login successful!",
+  "loginFailed": "Login failed. Please try again.",
+  "password": "Password"
+}

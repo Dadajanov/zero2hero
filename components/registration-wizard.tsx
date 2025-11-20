@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { PatternFormat } from "react-number-format"
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,7 @@ import { translations, type Language } from "@/lib/translations"
 import { useUniversitiesList, useStudentRegistration } from "@/hooks/use-registration"
 import { AuthApi } from "@/api/domains/auth-api"
 import { useUserStore } from "@/stores/user-store"
+import { setAccountId } from "@/helpers/authentication-manager"
 
 const GREETING_VIDEO_URL = "/videos/greeting.mp4" // Replace with your video URL
 
@@ -224,16 +225,25 @@ export function RegistrationWizard() {
     registrationMutation.mutate(registrationData, {
       onSuccess: (data) => {
         console.log("[v0] Registration successful:", data)
-        setUser({
-          id: data.id,
-          name: data.name,
+
+        const userData = {
+          accountId: data.accountId || data.id,
           phoneNumber: data.phoneNumber,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           purpose: formData.registrationGoal,
           status: formData.userStatus,
           universityCourse: Number.parseInt(formData.course),
           universityId: formData.universityId,
-          ...data
-        })
+          ...data,
+        }
+
+        setUser(userData)
+
+        if (data.accountId || data.id) {
+          setAccountId(data.accountId || data.id)
+        }
+
         localStorage.setItem("isAuthenticated", "true")
         router.push("/profile")
       },

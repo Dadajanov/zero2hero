@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import HomePage from "@/views/HomeView/HomeView"
 import { useRouter } from "next/navigation"
-import HomePage from "@/components/home-page"
+import { useEffect, useState } from "react"
 
 export default function Home() {
   const router = useRouter()

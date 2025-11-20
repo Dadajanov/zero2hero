@@ -3,17 +3,18 @@
 import { AuthApi } from "@/api/domains/auth-api"
 import { UserApi } from "@/api/domains/user.api"
 import LanguageSwitcher from "@/components/language-switcher"
-import { getTranslation, type Language } from "@/lib/translations"
 import { useUserStore } from "@/stores/user-store"
 import { useRouter } from 'next/navigation'
 import type React from "react"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { PatternFormat } from "react-number-format"
 
 export default function LoginPage() {
+  const { t } = useTranslation('profile')
+
   const router = useRouter()
   const setUser = useUserStore((state) => state.setUser)
-  const [language, setLanguage] = useState<Language>("ru")
   const [phone, setPhone] = useState("")
   const [code, setCode] = useState("")
   const [sessionId, setSessionId] = useState("")
@@ -23,13 +24,6 @@ export default function LoginPage() {
   const [timer, setTimer] = useState(0)
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("userLanguage") as Language
-    if (savedLang) {
-      setLanguage(savedLang)
-    }
-  }, [])
-
-  useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
         setTimer((prev) => prev - 1)
@@ -37,8 +31,6 @@ export default function LoginPage() {
       return () => clearInterval(interval)
     }
   }, [timer])
-
-  const t = (key: string) => getTranslation(language, key as any)
 
   const formatPhoneForAPI = (formattedPhone: string): string => {
     // Remove all non-numeric characters

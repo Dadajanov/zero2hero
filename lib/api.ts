@@ -1,8 +1,7 @@
-import { applyHeadersRequestInterceptor } from "@/helpers/headers-request-interceptor";
-import { applyJWTResponseInterceptor } from "@/helpers/jwt-interceptor";
-import { applyUnauthenticatedResponseInterceptor } from "@/helpers/unauthorized-response-interceptor";
-import axios, { type AxiosError, type AxiosResponse } from "axios";
-import queryString from 'query-string';
+import axios, { type AxiosResponse, type AxiosError, type InternalAxiosRequestConfig } from "axios"
+import { applyHeadersRequestInterceptor } from "@/helpers/headers-request-interceptor"
+import { applyJWTResponseInterceptor } from "@/helpers/jwt-interceptor"
+import { applyUnauthenticatedResponseInterceptor } from "@/helpers/unauthorized-response-interceptor"
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +28,10 @@ declare module "axios" {
 // ----------------------------------------------------------------------
 
 const extractResponse = (response: AxiosResponse) => {
+  console.log("[v0] Response interceptor - full response:", response)
+  console.log("[v0] Response interceptor - data:", response.data)
+  console.log("[v0] Response interceptor - status:", response.status)
+
   if (!!response.config.shouldReturnOriginalResponse) {
     return response
   }
@@ -40,10 +43,15 @@ const extractResponse = (response: AxiosResponse) => {
   }
 
   // If data is not an object (e.g., HTML string), keep original response
+  console.warn("[v0] Response data is not an object:", typeof response.data)
   return response
 }
 
 const extractErrorResponse = async (error: AxiosError) => {
+  console.error("[v0] API Error:", error)
+  console.error("[v0] Error response:", error.response)
+  console.error("[v0] Error response data:", error.response?.data)
+  console.error("[v0] Error status:", error.response?.status)
 
   // Don't transform error responses, just log and reject
   return Promise.reject(error)
@@ -56,13 +64,13 @@ const extractErrorResponse = async (error: AxiosError) => {
 export const httpClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30 * 1000,
-  paramsSerializer: params => queryString.stringify(params, { arrayFormat: 'bracket' }),
+  withCredentials: true,
 })
 
 applyHeadersRequestInterceptor(httpClient)
 
-  // Apply response interceptor
-  ; (httpClient.defaults as any).shouldReturnOriginalResponse = false
+// Apply response interceptor
+;(httpClient.defaults as any).shouldReturnOriginalResponse = false
 httpClient.interceptors.response.use(extractResponse, extractErrorResponse)
 
 applyJWTResponseInterceptor(httpClient)
@@ -137,5 +145,4 @@ export const api = {
 }
 
 // Export httpClient for custom requests
-export { httpClient as axiosInstance };
-
+export { httpClient as axiosInstance }

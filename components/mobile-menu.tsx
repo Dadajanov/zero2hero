@@ -2,10 +2,11 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface MobileMenuProps {
   navItems: Array<{ label: string; href: string }>
@@ -14,6 +15,7 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ navItems, actionButtons }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation(['navbar', 'common'])
   const router = useRouter()
 
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -76,7 +78,7 @@ export default function MobileMenu({ navItems, actionButtons }: MobileMenuProps)
                       className="text-lg font-semibold text-foreground hover:text-primary transition-colors py-3 border-b border-gray-100 whitespace-nowrap"
                       whileHover={{ x: 10 }}
                     >
-                      {item.label}
+                      {(t(item.label))}
                     </motion.a>
                   ))}
                 </nav>

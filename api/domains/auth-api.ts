@@ -1,6 +1,6 @@
 import { setAuthTokensConfig } from "@/helpers/authentication-manager"
 import { axiosInstance } from "@/lib/api"
-import { ApiResponse, LoginRequest, LoginResponse, LoginVerifyRequest, SendVerificationCodeRequest, SendVerificationCodeResponse, StudentRegistrationRequest, StudentRegistrationResponse } from "../types/auth-api"
+import { ApiResponse, LoginRequest, LoginResponse, LoginVerifyRequest, SendVerificationCodeRequest, SendVerificationCodeResponse, StudentRegistrationRequest, StudentRegistrationResponse } from "../types/auth-api.d"
 
 export class AuthApi {
   static async registerStudent(params: StudentRegistrationRequest): Promise<StudentRegistrationResponse> {

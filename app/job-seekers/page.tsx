@@ -1,5 +1,5 @@
-import JobSeekersPage from "@/components/job-seekers-page"
+import JobSeekersView from "@/views/JobSeekersView/JobSeekersView"
 
 export default function JobSeekers() {
-  return <JobSeekersPage />
+  return <JobSeekersView />
 }

@@ -1,0 +1,11 @@
+{
+  "loginTitle": "Вход",
+  "enterPhoneNumber": "Введите ваш номер телефона",
+  "loginWithCode": "Войти с кодом",
+  "verificationCodeSent": "Код подтверждения отправлен",
+  "enterVerificationCode": "Введите код подтверждения",
+  "invalidCode": "Неверный код подтверждения",
+  "loginSuccess": "Вход выполнен успешно!",
+  "loginFailed": "Ошибка входа. Пожалуйста, попробуйте снова.",
+  "password": "Пароль"
+}

@@ -18,7 +18,7 @@ let refreshTokenPromise: Promise<any> | null = null
 
 export const refreshAccessToken = async (refreshToken: string, axiosInstance: AxiosInstance) => {
   try {
-    const { data } = await axiosInstance.put('/students/refresh-token', {
+    const { data } = await axiosInstance.post('/students/refresh-token', {
       refreshToken,
     })
     return data

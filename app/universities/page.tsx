@@ -1,5 +1,6 @@
-import UniversitiesPage from "@/components/universities-page"
+import UniversitiesView from "@/views/UniversitiesView/UniversitiesView";
+
 
 export default function Universities() {
-  return <UniversitiesPage />
+  return <UniversitiesView />
 }

@@ -1,5 +1,5 @@
-import EmployersPage from "@/components/employers-page"
+import EmployersView from "@/views/EmployersView/EmployersView"
 
 export default function Employers() {
-  return <EmployersPage />
+  return <EmployersView />
 }

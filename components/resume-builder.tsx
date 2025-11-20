@@ -1,13 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import { useRouter } from 'next/navigation'
-import { getTranslation, type Language } from "@/lib/translations"
-import LanguageSwitcher from "./language-switcher"
-import { User, Upload, Plus, Trash2, Download, Share2, Menu, X, LogOut } from 'lucide-react'
-import jsPDF from "jspdf"
+import { useEffect, useState } from "react"
+
 import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
+import { Download, Plus, Trash2, Upload, User } from 'lucide-react'
+import { useTranslation } from "react-i18next"
 
 const demoUserData = {
   firstName: "Алексей",
@@ -60,16 +59,14 @@ const demoUserData = {
 
 export default function ResumeBuilder() {
   const router = useRouter()
-  const [language, setLanguage] = useState<Language>("ru")
+  const { t } = useTranslation('home')
   const [userData, setUserData] = useState(demoUserData)
   const [currentSection, setCurrentSection] = useState(1)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("userLanguage") as Language
     const savedUserData = localStorage.getItem("registrationData")
 
-    if (savedLang) setLanguage(savedLang)
     if (savedUserData) {
       try {
         const parsedData = JSON.parse(savedUserData)
@@ -80,7 +77,6 @@ export default function ResumeBuilder() {
     }
   }, [])
 
-  const t = (key: string) => getTranslation(language, key as any)
 
   const handleSave = () => {
     localStorage.setItem("registrationData", JSON.stringify(userData))
@@ -124,44 +120,6 @@ export default function ResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
-          <div className="text-xl sm:text-2xl font-bold text-primary cursor-pointer" onClick={() => router.push("/")}>
-            ZERO 2 HERO
-          </div>
-
-          <nav className="hidden lg:flex gap-8">
-            {[
-              { label: t("candidates"), href: "/job-seekers" },
-              { label: t("employers"), href: "/employers" },
-              { label: t("universities"), href: "/universities" },
-              { label: t("aboutUs"), href: "/about" },
-            ].map((item) => (
-              <a key={item.label} href={item.href} className="font-semibold text-foreground hover:text-primary">
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitcher />
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-3"
-            >
-              <LogOut size={20} />
-              {t("logout")}
-            </button>
-          </div>
-
-          <div className="flex lg:hidden items-center gap-2">
-            <LanguageSwitcher />
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content - Split Screen */}
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -175,9 +133,8 @@ export default function ResumeBuilder() {
                   <button
                     key={section}
                     onClick={() => setCurrentSection(section)}
-                    className={`flex-1 h-2 rounded-full ${
-                      currentSection >= section ? "bg-primary" : "bg-gray-200"
-                    }`}
+                    className={`flex-1 h-2 rounded-full ${currentSection >= section ? "bg-primary" : "bg-gray-200"
+                      }`}
                   />
                 ))}
               </div>

@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { AuthApi, type StudentRegistrationRequest } from "@/api/domains/auth-api"
+import { AuthApi } from "@/api/domains/auth-api"
 import { UniversityApi } from "@/api/domains/university-api"
+import { StudentRegistrationRequest } from "@/api/types/auth-api"
+import { useEffect, useState } from "react"
 
 export const useUniversitiesList = () => {
   const [locale, setLocale] = useState("ru")
