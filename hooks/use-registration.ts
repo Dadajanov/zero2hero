@@ -3,74 +3,38 @@
 import { AuthApi } from "@/api/domains/auth-api"
 import { UniversityApi } from "@/api/domains/university-api"
 import { StudentRegistrationRequest } from "@/api/types/auth-api"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 
 export const useUniversitiesList = () => {
   const [locale, setLocale] = useState("ru")
-  const [universities, setUniversities] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const savedLang = localStorage.getItem("language") || "ru"
     setLocale(savedLang)
   }, [])
 
-  useEffect(() => {
-    const fetchUniversities = async () => {
-      setIsLoading(true)
-      try {
-        console.log("[v0] Fetching universities...")
-        const result = await UniversityApi.fetchUniversities()
-        console.log("[v0] Universities response:", result)
-        console.log("[v0] Universities is array:", Array.isArray(result))
+  const { data: universities = [], isLoading } = useQuery({
+    queryKey: ["universities-list", locale],
+    queryFn: async () => {
+      const result = await UniversityApi.fetchUniversities()
 
-        if (Array.isArray(result)) {
-          console.log("[v0] Universities length:", result.length)
-          setUniversities(result)
-        } else {
-          console.error("[v0] Universities response is not an array:", typeof result)
-          setUniversities([])
-        }
-      } catch (error) {
-        console.error("[v0] Error fetching universities:", error)
-        setUniversities([])
-      } finally {
-        setIsLoading(false)
+      // Ensure we return an array
+      if (Array.isArray(result)) {
+        return result
       }
-    }
-
-    fetchUniversities()
-  }, [locale])
+      return []
+    },
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+  })
 
   return { universities, isLoading }
 }
 
 export const useStudentRegistration = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
+  const mutation = useMutation({
+    mutationFn: (data: StudentRegistrationRequest) => AuthApi.registerStudent(data),
+  })
 
-  const mutate = async (
-    data: StudentRegistrationRequest,
-    options?: {
-      onSuccess?: (data: any) => void
-      onError?: (error: Error) => void
-    }
-  ) => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const result = await AuthApi.registerStudent(data)
-      options?.onSuccess?.(result)
-      return result
-    } catch (err) {
-      const error = err as Error
-      setError(error)
-      options?.onError?.(error)
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  return { mutate, isLoading, error }
+  return mutation
 }

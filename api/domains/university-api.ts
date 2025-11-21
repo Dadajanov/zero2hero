@@ -1,4 +1,5 @@
 import { httpClient } from "@/lib/api"
+import { ApiResponse } from "../types/auth-api"
 
 export interface University {
   universityId: number
@@ -8,10 +9,7 @@ export interface University {
 
 export class UniversityApi {
   static async fetchUniversities(): Promise<University[]> {
-    console.log("[v0] Calling universities API...")
-    const response = await httpClient.get<University[]>("/universities/get-list")
-    console.log("[v0] Raw response:", response)
-    console.log("[v0] Response data:", response.data)
-    return response.data
+    const { data } = await httpClient.get<ApiResponse<University[]>>("/universities/get-list")
+    return data.data
   }
 }

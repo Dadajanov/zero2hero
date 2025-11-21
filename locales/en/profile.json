@@ -78,5 +78,20 @@
   "languageLevel_B1": "B1 - Intermediate",
   "languageLevel_B2": "B2 - Upper Intermediate",
   "languageLevel_C1": "C1 - Advanced",
-  "languageLevel_C2": "C2 - Proficient"
+  "languageLevel_C2": "C2 - Proficient",
+  "university": "University",
+  "selectUniversity": "Select university...",
+  "searchUniversity": "Search university...",
+  "noUniversityFound": "No university found.",
+  "facultyPlaceholder": "Faculty (e.g., Computer Science)",
+  "specializationPlaceholder": "Specialization (e.g., Software Engineering)",
+  "degree": "Degree Duration",
+  "selectDegree": "Select degree duration...",
+  "searchDegree": "Search...",
+  "noDegreeFound": "No option found.",
+  "startYear": "Start Year",
+  "endYear": "End Year",
+  "currentlyStudying": "Currently studying here",
+  "present": "Present",
+  "years": "years"
 }

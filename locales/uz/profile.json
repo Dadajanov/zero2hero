@@ -78,5 +78,20 @@
   "languageLevel_B1": "B1 - O'rta",
   "languageLevel_B2": "B2 - O'rtadan yuqori",
   "languageLevel_C1": "C1 - Ilg'or",
-  "languageLevel_C2": "C2 - Professional"
+  "languageLevel_C2": "C2 - Professional",
+  "university": "Universitet",
+  "selectUniversity": "Universitetni tanlang...",
+  "searchUniversity": "Universitetni qidirish...",
+  "noUniversityFound": "Universitet topilmadi.",
+  "facultyPlaceholder": "Fakultet (masalan, Kompyuter fanlari)",
+  "specializationPlaceholder": "Mutaxassislik (masalan, Dasturiy ta'minot)",
+  "degree": "Ta'lim davomiyligi",
+  "selectDegree": "Davomiyligini tanlang...",
+  "searchDegree": "Qidirish...",
+  "noDegreeFound": "Variant topilmadi.",
+  "startYear": "Boshlangan yil",
+  "endYear": "Tugatgan yil",
+  "currentlyStudying": "Hozir bu yerda o'qiyapman",
+  "present": "Hozirgi vaqt",
+  "years": "yil"
 }

@@ -39,16 +39,11 @@ export const PhoneNumber = (props: RegisrationFormProps) => {
 
     try {
       const phoneDigits = formData.phone.replace(/\D/g, "")
-      console.log("[v0] Sending verification code to:", phoneDigits)
       await AuthApi.sendVerificationCode({ phoneNumber: phoneDigits })
 
-      console.log("[v0] Verification code sent successfully")
       setCodeSent(true)
       setTimer(60)
     } catch (error: any) {
-      console.error("[v0] Send code error:", error)
-      console.error("[v0] Error response:", error.response)
-      console.error("[v0] Error data:", error.response?.data)
 
       // Extract error message from various possible response formats
       let errorMessage = t("sendCodeError")

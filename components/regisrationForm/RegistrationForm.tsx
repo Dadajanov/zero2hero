@@ -155,8 +155,6 @@ export function RegistrationForm() {
 
     registrationMutation.mutate(registrationData, {
       onSuccess: (data) => {
-        console.log("[v0] Registration successful:", data)
-
         const userData = {
           accountId: data.accountId || data.id,
           phoneNumber: data.phoneNumber,

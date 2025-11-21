@@ -78,5 +78,20 @@
   "languageLevel_B1": "B1 - Средний",
   "languageLevel_B2": "B2 - Выше среднего",
   "languageLevel_C1": "C1 - Продвинутый",
-  "languageLevel_C2": "C2 - Профессиональный"
+  "languageLevel_C2": "C2 - Профессиональный",
+  "university": "Университет",
+  "selectUniversity": "Выберите университет...",
+  "searchUniversity": "Поиск университета...",
+  "noUniversityFound": "Университет не найден.",
+  "facultyPlaceholder": "Факультет (например, Компьютерные науки)",
+  "specializationPlaceholder": "Специализация (например, Программная инженерия)",
+  "degree": "Продолжительность обучения",
+  "selectDegree": "Выберите продолжительность...",
+  "searchDegree": "Поиск...",
+  "noDegreeFound": "Вариант не найден.",
+  "startYear": "Год начала",
+  "endYear": "Год окончания",
+  "currentlyStudying": "Учусь здесь в настоящее время",
+  "present": "Настоящее время",
+  "years": "лет"
 }

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
 import { api } from "@/lib/api"
+import { useEffect, useState } from "react"
 
 export function useVacancies() {
   const [data, setData] = useState<any>(null)
@@ -103,7 +103,6 @@ export function useRegistration() {
     setError(null)
     try {
       const result = await api.submitRegistration(data)
-      console.log("[v0] Registration successful:", result)
       return result
     } catch (err) {
       const error = err as Error
