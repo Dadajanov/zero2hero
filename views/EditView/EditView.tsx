@@ -12,10 +12,11 @@ import { MiniCVPreview } from '@/views/EditView/Components/MiniCVPreview'
 export default function EditView() {
   const { t } = useTranslation('profile')
   const router = useRouter();
-  const { isAuthenticated } = useUserStore()
+  const { isAuthenticated, user } = useUserStore()
 
   useEffect(() => {
     if (!isAuthenticated()) {
+      console.log(user);
       router.push("/login")
       return
     }
@@ -36,9 +37,9 @@ export default function EditView() {
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Left: Edit Form */}
-          <EditFom />
+          {isAuthenticated() && <EditFom />}
 
-          <MiniCVPreview />
+          {isAuthenticated() && <MiniCVPreview />}
         </div>
       </div>
     </div>

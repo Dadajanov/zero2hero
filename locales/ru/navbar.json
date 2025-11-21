@@ -1,4 +1,7 @@
 {
+  "login": "Войти",
+  "profile": "Профиль",
+  "logout": "Выйти",
   "candidates": "Соискателям",
   "employers": "Работодателям",
   "universities": "Университетам",

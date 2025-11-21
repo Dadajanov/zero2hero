@@ -1,4 +1,7 @@
 {
+  "login": "Kirish",
+  "profile": "Profil",
+  "logout": "Chiqish",
   "candidates": "Nomzodlarga",
   "employers": "Ish beruvchilarga",
   "universities": "Universitetlarga",

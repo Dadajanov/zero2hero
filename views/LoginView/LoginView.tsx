@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import { PatternFormat } from "react-number-format"
 
 export default function LoginView() {
-  const { t } = useTranslation(['login', 'common'])
+  const { t } = useTranslation(['login', 'common',])
 
   const router = useRouter()
   const setUser = useUserStore((state) => state.setUser)
@@ -43,7 +43,7 @@ export default function LoginView() {
     const cleanPhone = formatPhoneForAPI(phone)
 
     if (cleanPhone.length !== 12 || !cleanPhone.startsWith("998")) {
-      setError(t("phoneValidation"))
+      setError(t("phoneValidation", { ns: 'registration' }))
       return
     }
 
@@ -58,9 +58,8 @@ export default function LoginView() {
       setSessionId(data.sessionId)
       setError("")
     } catch (err: any) {
-      console.error("[v0] Login send code error:", err)
       const errorMessage =
-        err.response?.data?.message || err.response?.data?.error || err.message || t("sendCodeError")
+        err.response?.data?.message || err.response?.data?.error || err.message || t("sendCodeError", { ns: 'registration' })
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -146,7 +145,7 @@ export default function LoginView() {
                   disabled={isLoading}
                   className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? t("sending") : t("sendCode")}
+                  {isLoading ? t("sending", { ns: 'registration' }) : t("sendCode", { ns: 'registration' })}
                 </button>
               </form>
             ) : (
@@ -183,7 +182,7 @@ export default function LoginView() {
                   disabled={isLoading}
                   className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? t("sending") : t("loginWithCode")}
+                  {isLoading ? t("sending", { ns: 'registration' }) : t("loginWithCode",)}
                 </button>
 
                 <button
@@ -192,7 +191,7 @@ export default function LoginView() {
                   disabled={timer > 0}
                   className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {timer > 0 ? `${t("resend")} (${timer}s)` : t("resend")}
+                  {timer > 0 ? `${t("resend", { ns: 'registration' })} (${timer}s)` : t("resend", { ns: 'registration' })}
                 </button>
 
                 <button

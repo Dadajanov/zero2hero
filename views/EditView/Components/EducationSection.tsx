@@ -195,7 +195,7 @@ export const EducationSection = (props: EducationSectionProps) => {
     </div>
 
     <div className="space-y-3">
-      {user.education.map((edu: any, idx: number) => (
+      {user.education && user.education.map((edu: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4 space-y-3 relative">
           <div className="flex justify-between items-start mb-2">
             <h3 className="font-semibold text-gray-700">

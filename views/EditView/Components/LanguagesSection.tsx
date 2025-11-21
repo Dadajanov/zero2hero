@@ -31,7 +31,7 @@ export const LanguagesSection = (props: UserInfoProps) => {
     </button>
 
     <div className="space-y-4">
-      {user?.languageSkills?.map((lang: any, idx: number) => (
+      {user?.languageSkills && user?.languageSkills?.map((lang: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4">
           <div className="flex justify-between mb-3">
             <input

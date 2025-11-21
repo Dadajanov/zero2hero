@@ -40,7 +40,7 @@ export const SkillsSections = (props: UserInfoProps) => {
     </button>
 
     <div className="space-y-4">
-      {user?.technicalSkills?.map((skill: any, idx: number) => (
+      {user?.technicalSkills && user?.technicalSkills?.map((skill: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4">
           <div className="flex justify-between mb-3">
             <div className="flex-1 space-y-3">

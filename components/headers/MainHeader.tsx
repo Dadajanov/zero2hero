@@ -5,7 +5,7 @@ import { useUserStore } from "@/stores/user-store"
 import { motion } from "framer-motion"
 import { LogOut, Menu, User, X } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import MobileMenu from "../mobile-menu"
 
@@ -18,17 +18,19 @@ const navItems = [
 
 
 export default function MainHeader() {
-  const { t } = useTranslation(['navbar', 'common'])
+  const { t } = useTranslation(['navbar', 'common', 'login'])
   const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { isAuthenticated } = useUserStore()
-  const { clearUser } = useUserStore()
+  const { clearUser, user } = useUserStore()
 
 
   const handleLogout = () => {
     clearUser()
     localStorage.removeItem("isAuthenticated")
     setIsMobileMenuOpen(false)
+    console.log(user);
+
     router.push("/")
   }
 
@@ -38,9 +40,9 @@ export default function MainHeader() {
 
 
   const mobileActionButtons = (
-    <>
+    <Fragment>
       {isAuthenticated() ? (
-        <>
+        <Fragment>
           <button
             onClick={() => {
               router.push("/profile")
@@ -60,7 +62,7 @@ export default function MainHeader() {
             <LogOut size={20} />
             {t("logout")}
           </button>
-        </>
+        </Fragment>
       ) : (
         <button
           onClick={() => {
@@ -72,7 +74,7 @@ export default function MainHeader() {
           {t("login")}
         </button>
       )}
-    </>
+    </Fragment>
   )
 
   return (
@@ -108,7 +110,7 @@ export default function MainHeader() {
         <div className="hidden lg:flex items-center gap-3">
           <LanguageSwitcher />
           {isAuthenticated() ? (
-            <>
+            <Fragment>
               <motion.button
                 onClick={() => router.push("/profile")}
                 className="flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-5 py-3 transition-all whitespace-nowrap hover:scale-105"
@@ -125,7 +127,7 @@ export default function MainHeader() {
                 <LogOut size={20} />
                 {t("logout")}
               </motion.button>
-            </>
+            </Fragment>
           ) : (
             <motion.button
               onClick={() => router.push("/login")}

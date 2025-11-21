@@ -2,11 +2,10 @@
 
 import type React from "react"
 
-import { type Language } from "@/lib/translations"
 import { motion, useInView } from "framer-motion"
-import { Award, BookOpen, Briefcase, Heart, LogOut, Target, TrendingUp, User, Users } from 'lucide-react'
+import { Award, BookOpen, Briefcase, Heart, Target, TrendingUp, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 const fadeInUp = {
@@ -25,23 +24,11 @@ const staggerContainer = {
 }
 
 export default function AboutView() {
-  const { t } = useTranslation('about')
+  const { t, i18n } = useTranslation('about')
   const router = useRouter()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [language, setLanguage] = useState<Language>("ru")
+  const language = i18n.language
 
-  useEffect(() => {
-    const auth = localStorage.getItem("isAuthenticated")
-    const savedLang = localStorage.getItem("selectedLanguage") as Language
-    setIsAuthenticated(auth === "true")
-    if (savedLang) setLanguage(savedLang)
-  }, [])
-
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated")
-    setIsAuthenticated(false)
-    router.push("/")
-  }
 
   const values = [
     {
@@ -97,45 +84,6 @@ export default function AboutView() {
       description: t("specialistInPlatforms"),
     },
   ]
-
-  const navItems = [
-    { label: t("candidates"), href: "/job-seekers" },
-    { label: t("employers"), href: "/employers" },
-    { label: t("universities"), href: "/universities" },
-    { label: t("aboutUs"), href: "/about" },
-  ]
-
-  const mobileActionButtons = (
-    <>
-      {isAuthenticated ? (
-        <>
-          <button
-            onClick={() => router.push("/profile")}
-            className="flex items-center justify-center gap-2 w-full border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-5 py-3 transition-all font-semibold"
-          >
-            <User size={20} />
-            {t("profile")}
-          </button>
-          <button
-            onClick={() => {
-              handleLogout()
-            }}
-            className="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-3 transition-all font-semibold"
-          >
-            <LogOut size={20} />
-            {t("logout")}
-          </button>
-        </>
-      ) : (
-        <button
-          onClick={() => router.push("/login")}
-          className="w-full bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all"
-        >
-          {t("login")}
-        </button>
-      )}
-    </>
-  )
 
   return (
     <div className="min-h-screen bg-background">

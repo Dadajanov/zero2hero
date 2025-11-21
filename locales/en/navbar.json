@@ -1,4 +1,7 @@
 {
+  "login": "Login",
+  "profile": "Profile",
+  "logout": "Log out",
   "candidates": "For Candidates",
   "employers": "For Employers",
   "universities": "For Universities",
