@@ -26,7 +26,7 @@ const demostoreUser = {
 }
 
 export default function EditView() {
-  const { t } = useTranslation('about')
+  const { t } = useTranslation('profile')
   const router = useRouter()
   const { user: storeUser, setUser: setStoreUser, isAuthenticated, clearUser } = useUserStore()
   const [savedSections, setSavedSections] = useState<{ [key: string]: boolean }>({})
