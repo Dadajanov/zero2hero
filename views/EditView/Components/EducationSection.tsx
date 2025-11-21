@@ -1,13 +1,25 @@
-import { EducationApi } from "@/api/domains/education-api";
-import { Education } from "@/api/types/education-api";
-import { AutocompleteInput } from "@/components/AutoCompleteInput";
-import { Combobox } from "@/components/Combobox";
-import { useUniversitiesList } from "@/hooks/use-registration";
-import { useToast } from "@/hooks/use-toast";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { EducationApi } from "@/api/domains/education-api";
+import { Education } from "@/api/types/education-api";
+import { AutocompleteInput } from "@/components/AutoCompleteInput";
+import { Combobox } from "@/components/Combobox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useUniversitiesList } from "@/hooks/use-registration";
+import { useToast } from "@/hooks/use-toast";
+
 
 type EducationSectionProps = UserInfoProps & {
   onRefetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<Education[], Error>>
@@ -23,9 +35,11 @@ const degreeOptions = [
 ]
 
 export const EducationSection = (props: EducationSectionProps) => {
-  const { t } = useTranslation('profile');
-  const { setUser, user, onSave, savedSections, onRefetch } = props;
+  const { t } = useTranslation(['profile', 'common']);
+  const { setUser, user, onRefetch } = props;
   const [savingEducation, setSavingEducation] = useState<{ [key: number]: boolean }>({})
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [educationToDelete, setEducationToDelete] = useState<string | boolean | null>(null)
   const [mappedUniversitiesList, setMappedUniversitiesList] = useState<{ value: string, label: string }[]>([{ value: '', label: '' }])
 
   const { universities } = useUniversitiesList();
@@ -41,6 +55,10 @@ export const EducationSection = (props: EducationSectionProps) => {
     }
 
   }, [universities])
+
+  const handleDeleteEducation = async (index: number) => {
+    setEducationToDelete(String(index))
+  }
 
   const handleAddButtonClick = () => {
     if (user?.education) {
@@ -120,7 +138,7 @@ export const EducationSection = (props: EducationSectionProps) => {
           isCurrent: edu.isCurrent,
           specialization: edu.specialization,
           startYear: edu.startYear,
-          universityId: edu.universityId,
+          universityId: edu.universityId === null ? null : Number(edu.universityId),
         })
 
         // Update local state with the returned ID
@@ -153,8 +171,8 @@ export const EducationSection = (props: EducationSectionProps) => {
     }
   }
 
-  const handleDeleteEducation = async (index: number) => {
-    const edu = user.education[index]
+  const confirmDeleteEducation = async () => {
+    const edu = user.education[educationToDelete]
 
     if (edu.educationId) {
       // If it has an ID, delete from server
@@ -168,7 +186,7 @@ export const EducationSection = (props: EducationSectionProps) => {
     }
 
     // Remove from local state
-    setUser({ ...user, education: user.education.filter((_: any, i: number) => i !== index) })
+    setUser({ ...user, education: user.education.filter((_: any, i: number) => i !== Number(educationToDelete)) })
   }
 
   return <div className="bg-white rounded-lg shadow-lg p-6">
@@ -341,5 +359,20 @@ export const EducationSection = (props: EducationSectionProps) => {
       <Plus size={20} />
       {t("addEducationBtn")}
     </button>
+
+    <AlertDialog open={Boolean(educationToDelete)} onOpenChange={setEducationToDelete}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("confirmDelete")}</AlertDialogTitle>
+          <AlertDialogDescription>{t("confirmDeleteEducation")}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setEducationToDelete(null)}>{t("cancel", { ns: 'common' })}</AlertDialogCancel>
+          <AlertDialogAction onClick={confirmDeleteEducation} className="bg-red-600 hover:bg-red-700">
+            {t("delete", { ns: 'common' })}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 }

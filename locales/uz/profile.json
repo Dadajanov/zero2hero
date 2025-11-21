@@ -100,5 +100,7 @@
   "success": "Muvaffaqiyat",
   "fillRequiredFields": "Iltimos, barcha majburiy maydonlarni to'ldiring",
   "educationSaved": "Ta'lim muvaffaqiyatli saqlandi",
-  "educationSaveError": "Ta'limni saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+  "educationSaveError": "Ta'limni saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+  "confirmDelete": "O'chirishni tasdiqlash",
+  "confirmDeleteEducation": "Ushbu ta'lim yozuvini o'chirishga ishonchingiz komilmi? Bu amalni bekor qilib bo'lmaydi."
 }

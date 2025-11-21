@@ -100,5 +100,7 @@
   "success": "Success",
   "fillRequiredFields": "Please fill in all required fields",
   "educationSaved": "Education entry saved successfully",
-  "educationSaveError": "Failed to save education. Please try again."
+  "educationSaveError": "Failed to save education. Please try again.",
+  "confirmDelete": "Подтверждение удаления",
+  "confirmDeleteEducation": "Вы уверены, что хотите удалить эту запись об образовании? Это действие нельзя отменить."
 }
