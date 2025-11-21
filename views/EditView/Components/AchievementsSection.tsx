@@ -5,6 +5,22 @@ export const AchievementsSection = (props: UserInfoProps) => {
   const { t } = useTranslation('profile');
   const { setUser, user, onSave, savedSections } = props;
 
+  const handleAddButtonClick = () => {
+    if (user?.achievements) {
+      setUser({
+        ...user,
+        achievements: [...user?.achievements, { year: "", title: "", description: "" }],
+      })
+    } else {
+      setUser({
+        ...user,
+        achievements: [{ year: "", title: "", description: "" }],
+      })
+    }
+  }
+
+
+
   return <div className="bg-white rounded-lg shadow-lg p-6">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold">8. {t("achievements")}</h2>
@@ -18,12 +34,7 @@ export const AchievementsSection = (props: UserInfoProps) => {
     </div>
 
     <button
-      onClick={() =>
-        setUser({
-          ...user,
-          achievements: [...user?.achievements, { year: "", title: "", description: "" }],
-        })
-      }
+      onClick={handleAddButtonClick}
       className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />
@@ -31,7 +42,7 @@ export const AchievementsSection = (props: UserInfoProps) => {
     </button>
 
     <div className="space-y-3">
-      {user?.achievements?.map((ach: any, idx: number) => (
+      {user?.achievements && user.achievements.map((ach: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4 space-y-3">
           <input
             type="text"

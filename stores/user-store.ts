@@ -3,6 +3,18 @@ import { create } from 'zustand';
 import 'zustand/middleware'; // <-- REQUIRED FOR TYPES IN ZUSTAND V5
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+const UserInitValue = {
+  studentId: 1,
+  studentName: '',
+  phoneNumber: '',
+  purpose: '',
+  status: 'string',
+  dateOfBirth: '',
+  gender: '',
+  languageSkills: [{ language: "", level: "A1" }],
+  technicalSkills: [{ name: "", description: "", proficiency: 0 }],
+  education: [{ years: "", institution: "", degree: "", specialty: "" }]
+}
 
 interface UserState {
   user: UserData | null
@@ -14,7 +26,7 @@ interface UserState {
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
-      user: null,
+      user: UserInitValue,
       setUser: (user) => set({ user }),
       clearUser: () => set({ user: null }),
       isAuthenticated: () => !!get().user,

@@ -28,7 +28,12 @@ export default function MainHeader() {
   const handleLogout = () => {
     clearUser()
     localStorage.removeItem("isAuthenticated")
+    setIsMobileMenuOpen(false)
     router.push("/")
+  }
+
+  const handleClose = () => {
+    setIsMobileMenuOpen(false)
   }
 
 
@@ -37,8 +42,11 @@ export default function MainHeader() {
       {isAuthenticated() ? (
         <>
           <button
-            onClick={() => router.push("/profile")}
-            className="flex items-center justify-center gap-2 w-full border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-5 py-3 transition-all font-semibold"
+            onClick={() => {
+              router.push("/profile")
+              handleClose()
+            }}
+            className="cursor-pointer flex items-center justify-center gap-2 w-full border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-xl px-5 py-3 transition-all font-semibold"
           >
             <User size={20} />
             {t("profile")}
@@ -47,7 +55,7 @@ export default function MainHeader() {
             onClick={() => {
               handleLogout()
             }}
-            className="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-3 transition-all font-semibold"
+            className="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-3 transition-all font-semibold cursor-pointer"
           >
             <LogOut size={20} />
             {t("logout")}
@@ -55,8 +63,11 @@ export default function MainHeader() {
         </>
       ) : (
         <button
-          onClick={() => router.push("/login")}
-          className="w-full bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all"
+          onClick={() => {
+            router.push("/login")
+            setIsMobileMenuOpen(false)
+          }}
+          className="w-full bg-primary hover:bg-blue-700 text-white rounded-xl px-5 py-3 font-semibold transition-all cursor-pointer"
         >
           {t("login")}
         </button>
@@ -146,7 +157,12 @@ export default function MainHeader() {
           exit={{ opacity: 0, height: 0 }}
           className="lg:hidden bg-white border-t border-gray-200"
         >
-          <MobileMenu navItems={navItems} actionButtons={mobileActionButtons} />
+          <MobileMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            navItems={navItems}
+            actionButtons={mobileActionButtons}
+          />
         </motion.div>
       )}
     </motion.header>

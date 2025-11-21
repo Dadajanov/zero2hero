@@ -5,6 +5,20 @@ export const EducationSection = (props: UserInfoProps) => {
   const { t } = useTranslation('profile');
   const { setUser, user, onSave, savedSections } = props;
 
+  const handleAddButtonClick = () => {
+    if (user?.education) {
+      setUser({
+        ...user,
+        education: [...user?.education, { years: "", institution: "", degree: "", specialty: "" }],
+      })
+    } else {
+      setUser({
+        ...user,
+        education: [{ years: "", institution: "", degree: "", specialty: "" }],
+      })
+    }
+  }
+
   return <div className="bg-white rounded-lg shadow-lg p-6">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold">6. {t("education")}</h2>
@@ -18,12 +32,7 @@ export const EducationSection = (props: UserInfoProps) => {
     </div>
 
     <button
-      onClick={() =>
-        setUser({
-          ...user,
-          education: [...user?.education, { years: "", institution: "", degree: "", specialty: "" }],
-        })
-      }
+      onClick={handleAddButtonClick}
       className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />

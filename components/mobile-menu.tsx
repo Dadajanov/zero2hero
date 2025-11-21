@@ -3,32 +3,25 @@
 import type React from "react"
 
 import { AnimatePresence, motion } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { X } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 interface MobileMenuProps {
   navItems: Array<{ label: string; href: string }>
   actionButtons?: React.ReactNode
+  isOpen: boolean,
+  onClose: () => void
 }
 
-export default function MobileMenu({ navItems, actionButtons }: MobileMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function MobileMenu(props: MobileMenuProps) {
+  const { navItems, actionButtons, isOpen, onClose } = props
   const { t } = useTranslation(['navbar', 'common'])
   const router = useRouter()
 
-  const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
     <div className="lg:hidden">
-      <button
-        onClick={toggleMenu}
-        className="p-2 text-foreground hover:text-primary transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
 
       <AnimatePresence>
         {isOpen && (
@@ -38,7 +31,7 @@ export default function MobileMenu({ navItems, actionButtons }: MobileMenuProps)
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={toggleMenu}
+              onClick={onClose}
               className="fixed inset-0 bg-black/50 z-40"
             />
 
@@ -54,14 +47,14 @@ export default function MobileMenu({ navItems, actionButtons }: MobileMenuProps)
                 <div className="flex justify-between items-center mb-8">
                   <a
                     href="/"
-                    onClick={toggleMenu}
+                    onClick={onClose}
                     className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
                   >
                     ZERO 2 HERO
                   </a>
                   <button
-                    onClick={toggleMenu}
-                    className="p-2 text-foreground hover:text-primary transition-colors"
+                    onClick={onClose}
+                    className="p-2 text-foreground hover:text-primary transition-colors cursor-pointer"
                     aria-label="Close menu"
                   >
                     <X size={24} />
@@ -74,7 +67,7 @@ export default function MobileMenu({ navItems, actionButtons }: MobileMenuProps)
                     <motion.a
                       key={item.label}
                       href={item.href}
-                      onClick={toggleMenu}
+                      onClick={onClose}
                       className="text-lg font-semibold text-foreground hover:text-primary transition-colors py-3 border-b border-gray-100 whitespace-nowrap"
                       whileHover={{ x: 10 }}
                     >

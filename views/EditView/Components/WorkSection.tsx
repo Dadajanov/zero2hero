@@ -5,6 +5,25 @@ export const WorkSection = (props: UserInfoProps) => {
   const { t } = useTranslation('profile');
   const { setUser, user, onSave, savedSections } = props;
 
+  const handleAddButtonClick = () => {
+    if (user?.workExperience) {
+      setUser({
+        ...user,
+        workExperience: [
+          ...user?.workExperience,
+          { period: "", company: "", position: "", achievements: [""] },
+        ],
+      })
+    } else {
+      setUser({
+        ...user,
+        workExperience: [
+          { period: "", company: "", position: "", achievements: [""] },
+        ],
+      })
+    }
+  }
+
   return <div className="bg-white rounded-lg shadow-lg p-6">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold">7. {t("workExperience")}</h2>
@@ -18,15 +37,7 @@ export const WorkSection = (props: UserInfoProps) => {
     </div>
 
     <button
-      onClick={() =>
-        setUser({
-          ...user,
-          workExperience: [
-            ...user?.workExperience,
-            { period: "", company: "", position: "", achievements: [""] },
-          ],
-        })
-      }
+      onClick={handleAddButtonClick}
       className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />
