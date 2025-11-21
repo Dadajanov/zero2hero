@@ -211,7 +211,7 @@ export default function LoginView() {
             <p className="text-center text-gray-700 mt-4">
               {t("noAccount", { ns: 'common' })}{" "}
               <a href="/registration" className="text-blue-600 font-semibold hover:underline">
-                {t("register", { ns: 'common ' })}
+                {t("register", { ns: 'common' })}
               </a>
             </p>
           </div>
