@@ -21,7 +21,7 @@ export default function MainHeader() {
   const { t } = useTranslation(['navbar', 'common'])
   const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { isAuthenticated } = useUserStore()
   const { clearUser } = useUserStore()
 
 
@@ -34,7 +34,7 @@ export default function MainHeader() {
 
   const mobileActionButtons = (
     <>
-      {isAuthenticated ? (
+      {isAuthenticated() ? (
         <>
           <button
             onClick={() => router.push("/profile")}
@@ -96,7 +96,7 @@ export default function MainHeader() {
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-3">
           <LanguageSwitcher />
-          {isAuthenticated ? (
+          {isAuthenticated() ? (
             <>
               <motion.button
                 onClick={() => router.push("/profile")}
