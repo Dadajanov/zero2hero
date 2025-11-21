@@ -10,7 +10,7 @@ export const WorkSection = (props: UserInfoProps) => {
       <h2 className="text-xl font-bold">7. {t("workExperience")}</h2>
       <button
         onClick={() => onSave("work")}
-        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700"
+        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 cursor-pointer"
       >
         {savedSections.work ? <Check size={16} /> : null}
         {savedSections.work ? t("saved") : t("save")}
@@ -22,26 +22,26 @@ export const WorkSection = (props: UserInfoProps) => {
         setUser({
           ...user,
           workExperience: [
-            ...user.workExperience,
+            ...user?.workExperience,
             { period: "", company: "", position: "", achievements: [""] },
           ],
         })
       }
-      className="flex items-center gap-2 text-primary mb-4"
+      className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />
       {t("addWorkBtn")}
     </button>
 
     <div className="space-y-3">
-      {user.workExperience?.map((exp: any, idx: number) => (
+      {user?.workExperience?.map((exp: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4 space-y-3">
           <input
             type="text"
             placeholder={t("periodPlaceholder")}
             value={exp.period || ""}
             onChange={(e) => {
-              const updated = [...user.workExperience]
+              const updated = [...user?.workExperience]
               updated[idx].period = e.target.value
               setUser({ ...user, workExperience: updated })
             }}
@@ -52,7 +52,7 @@ export const WorkSection = (props: UserInfoProps) => {
             placeholder={t("companyPlaceholder")}
             value={exp.company || ""}
             onChange={(e) => {
-              const updated = [...user.workExperience]
+              const updated = [...user?.workExperience]
               updated[idx].company = e.target.value
               setUser({ ...user, workExperience: updated })
             }}
@@ -63,7 +63,7 @@ export const WorkSection = (props: UserInfoProps) => {
             placeholder={t("positionPlaceholder")}
             value={exp.position || ""}
             onChange={(e) => {
-              const updated = [...user.workExperience]
+              const updated = [...user?.workExperience]
               updated[idx].position = e.target.value
               setUser({ ...user, workExperience: updated })
             }}
@@ -71,9 +71,9 @@ export const WorkSection = (props: UserInfoProps) => {
           />
           <button
             onClick={() =>
-              setUser({ ...user, workExperience: user.workExperience.filter((_: any, i: number) => i !== idx) })
+              setUser({ ...user, workExperience: user?.workExperience.filter((_: any, i: number) => i !== idx) })
             }
-            className="flex items-center gap-2 text-red-600 text-sm hover:text-red-700"
+            className="flex items-center gap-2 text-red-600 text-sm hover:text-red-700 cursor-pointer"
           >
             <Trash2 size={16} />
             {t("remove")}

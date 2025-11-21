@@ -10,7 +10,7 @@ export const LanguagesSection = (props: UserInfoProps) => {
       <h2 className="text-xl font-bold">4. {t("languages")}</h2>
       <button
         onClick={() => onSave("languages")}
-        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700"
+        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 cursor-pointer"
       >
         {savedSections.languages ? <Check size={16} /> : null}
         {savedSections.languages ? t("saved") : t("save")}
@@ -21,17 +21,17 @@ export const LanguagesSection = (props: UserInfoProps) => {
       onClick={() =>
         setUser({
           ...user,
-          languageSkills: [...user.languageSkills, { language: "", level: "A1" }],
+          languageSkills: [...user?.languageSkills, { language: "", level: "A1" }],
         })
       }
-      className="flex items-center gap-2 text-primary mb-4"
+      className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />
       {t("addLanguageBtn")}
     </button>
 
     <div className="space-y-4">
-      {user.languageSkills?.map((lang: any, idx: number) => (
+      {user?.languageSkills?.map((lang: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4">
           <div className="flex justify-between mb-3">
             <input
@@ -39,7 +39,7 @@ export const LanguagesSection = (props: UserInfoProps) => {
               placeholder={t("languagePlaceholder")}
               value={lang.language || ""}
               onChange={(e) => {
-                const updated = [...user.languageSkills]
+                const updated = [...user?.languageSkills]
                 updated[idx].language = e.target.value
                 setUser({ ...user, languageSkills: updated })
               }}
@@ -47,9 +47,9 @@ export const LanguagesSection = (props: UserInfoProps) => {
             />
             <button
               onClick={() =>
-                setUser({ ...user, languageSkills: user.languageSkills.filter((_: any, i: number) => i !== idx) })
+                setUser({ ...user, languageSkills: user?.languageSkills.filter((_: any, i: number) => i !== idx) })
               }
-              className="ml-2 text-red-600"
+              className="ml-2 text-red-600 cursor-pointer"
             >
               <Trash2 size={20} />
             </button>
@@ -58,7 +58,7 @@ export const LanguagesSection = (props: UserInfoProps) => {
           <select
             value={lang.level || "A1"}
             onChange={(e) => {
-              const updated = [...user.languageSkills]
+              const updated = [...user?.languageSkills]
               updated[idx].level = e.target.value
               setUser({ ...user, languageSkills: updated })
             }}

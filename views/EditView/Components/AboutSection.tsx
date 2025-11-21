@@ -10,7 +10,7 @@ export const AboutSection = (props: UserInfoProps) => {
       <h2 className="text-xl font-bold">3. {t("aboutMe")}</h2>
       <button
         onClick={() => onSave("about")}
-        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700"
+        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 cursor-pointer"
       >
         {savedSections.about ? <Check size={16} /> : null}
         {savedSections.about ? t("saved") : t("save")}
@@ -22,7 +22,7 @@ export const AboutSection = (props: UserInfoProps) => {
         <label className="block text-sm font-medium mb-2">{t("age")}</label>
         <input
           type="text"
-          value={user.age || ""}
+          value={user?.age || ""}
           onChange={(e) => setUser({ ...user, age: e.target.value })}
           className="w-full px-4 py-2 border rounded-lg"
         />
@@ -31,7 +31,7 @@ export const AboutSection = (props: UserInfoProps) => {
       <div>
         <label className="block text-sm font-medium mb-2">{t("shortDescription")}</label>
         <textarea
-          value={user.aboutDescription || ""}
+          value={user?.aboutDescription || ""}
           onChange={(e) => setUser({ ...user, aboutDescription: e.target.value })}
           className="w-full px-4 py-2 border rounded-lg"
           rows={5}

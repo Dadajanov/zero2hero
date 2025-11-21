@@ -10,7 +10,7 @@ export const AchievementsSection = (props: UserInfoProps) => {
       <h2 className="text-xl font-bold">8. {t("achievements")}</h2>
       <button
         onClick={() => onSave("achievements")}
-        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700"
+        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 cursor-pointer"
       >
         {savedSections.achievements ? <Check size={16} /> : null}
         {savedSections.achievements ? t("saved") : t("save")}
@@ -21,24 +21,24 @@ export const AchievementsSection = (props: UserInfoProps) => {
       onClick={() =>
         setUser({
           ...user,
-          achievements: [...user.achievements, { year: "", title: "", description: "" }],
+          achievements: [...user?.achievements, { year: "", title: "", description: "" }],
         })
       }
-      className="flex items-center gap-2 text-primary mb-4"
+      className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />
       {t("addAchievementBtn")}
     </button>
 
     <div className="space-y-3">
-      {user.achievements?.map((ach: any, idx: number) => (
+      {user?.achievements?.map((ach: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4 space-y-3">
           <input
             type="text"
             placeholder={t("yearPlaceholder")}
             value={ach.year || ""}
             onChange={(e) => {
-              const updated = [...user.achievements]
+              const updated = [...user?.achievements]
               updated[idx].year = e.target.value
               setUser({ ...user, achievements: updated })
             }}
@@ -49,7 +49,7 @@ export const AchievementsSection = (props: UserInfoProps) => {
             placeholder={t("achievementTitle")}
             value={ach.title || ""}
             onChange={(e) => {
-              const updated = [...user.achievements]
+              const updated = [...user?.achievements]
               updated[idx].title = e.target.value
               setUser({ ...user, achievements: updated })
             }}
@@ -59,7 +59,7 @@ export const AchievementsSection = (props: UserInfoProps) => {
             placeholder={t("achievementDescription")}
             value={ach.description || ""}
             onChange={(e) => {
-              const updated = [...user.achievements]
+              const updated = [...user?.achievements]
               updated[idx].description = e.target.value
               setUser({ ...user, achievements: updated })
             }}
@@ -68,9 +68,9 @@ export const AchievementsSection = (props: UserInfoProps) => {
           />
           <button
             onClick={() =>
-              setUser({ ...user, achievements: user.achievements.filter((_: any, i: number) => i !== idx) })
+              setUser({ ...user, achievements: user?.achievements.filter((_: any, i: number) => i !== idx) })
             }
-            className="flex items-center gap-2 text-red-600 text-sm hover:text-red-700"
+            className="flex items-center gap-2 text-red-600 text-sm hover:text-red-700 cursor-pointer"
           >
             <Trash2 size={16} />
             {t("remove")}

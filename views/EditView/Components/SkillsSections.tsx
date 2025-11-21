@@ -10,7 +10,7 @@ export const SkillsSections = (props: UserInfoProps) => {
       <h2 className="text-xl font-bold">5. {t("skills")}</h2>
       <button
         onClick={() => onSave("skills")}
-        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700"
+        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 cursor-pointer"
       >
         {savedSections.skills ? <Check size={16} /> : null}
         {savedSections.skills ? t("saved") : t("save")}
@@ -21,17 +21,17 @@ export const SkillsSections = (props: UserInfoProps) => {
       onClick={() =>
         setUser({
           ...user,
-          technicalSkills: [...user.technicalSkills, { name: "", description: "", proficiency: 0 }],
+          technicalSkills: [...user?.technicalSkills, { name: "", description: "", proficiency: 0 }],
         })
       }
-      className="flex items-center gap-2 text-primary mb-4"
+      className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
     >
       <Plus size={20} />
       {t("addSkillBtn")}
     </button>
 
     <div className="space-y-4">
-      {user.technicalSkills?.map((skill: any, idx: number) => (
+      {user?.technicalSkills?.map((skill: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4">
           <div className="flex justify-between mb-3">
             <div className="flex-1 space-y-3">
@@ -40,7 +40,7 @@ export const SkillsSections = (props: UserInfoProps) => {
                 placeholder={t("skillNamePlaceholder")}
                 value={skill.name || ""}
                 onChange={(e) => {
-                  const updated = [...user.technicalSkills]
+                  const updated = [...user?.technicalSkills]
                   updated[idx].name = e.target.value
                   setUser({ ...user, technicalSkills: updated })
                 }}
@@ -50,7 +50,7 @@ export const SkillsSections = (props: UserInfoProps) => {
                 placeholder={t("descriptionPlaceholder")}
                 value={skill.description || ""}
                 onChange={(e) => {
-                  const updated = [...user.technicalSkills]
+                  const updated = [...user?.technicalSkills]
                   updated[idx].description = e.target.value
                   setUser({ ...user, technicalSkills: updated })
                 }}
@@ -63,10 +63,10 @@ export const SkillsSections = (props: UserInfoProps) => {
               onClick={() =>
                 setUser({
                   ...user,
-                  technicalSkills: user.technicalSkills.filter((_: any, i: number) => i !== idx),
+                  technicalSkills: user?.technicalSkills.filter((_: any, i: number) => i !== idx),
                 })
               }
-              className="ml-2 text-red-600"
+              className="ml-2 text-red-600 cursor-pointer"
             >
               <Trash2 size={20} />
             </button>
@@ -78,7 +78,7 @@ export const SkillsSections = (props: UserInfoProps) => {
             max="100"
             value={skill.proficiency || 0}
             onChange={(e) => {
-              const updated = [...user.technicalSkills]
+              const updated = [...user?.technicalSkills]
               updated[idx].proficiency = parseInt(e.target.value)
               setUser({ ...user, technicalSkills: updated })
             }}
