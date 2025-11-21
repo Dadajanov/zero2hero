@@ -1,7 +1,7 @@
 "use client"
 
 import { AuthApi } from "@/api/domains/auth-api"
-import { UniversityApi } from "@/api/domains/university-api"
+import { EducationApi } from "@/api/domains/education-api"
 import { StudentRegistrationRequest } from "@/api/types/auth-api"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -14,10 +14,10 @@ export const useUniversitiesList = () => {
     setLocale(savedLang)
   }, [])
 
-  const { data: universities = [], isLoading } = useQuery({
+  const { data: universities = [], isLoading, refetch: refetchUniversitiesList } = useQuery({
     queryKey: ["universities-list", locale],
     queryFn: async () => {
-      const result = await UniversityApi.fetchUniversities()
+      const result = await EducationApi.fetchUniversities()
 
       // Ensure we return an array
       if (Array.isArray(result)) {
@@ -28,7 +28,7 @@ export const useUniversitiesList = () => {
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
   })
 
-  return { universities, isLoading }
+  return { universities, isLoading, refetchUniversitiesList }
 }
 
 export const useStudentRegistration = () => {

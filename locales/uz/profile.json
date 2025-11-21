@@ -93,5 +93,12 @@
   "endYear": "Tugatgan yil",
   "currentlyStudying": "Hozir bu yerda o'qiyapman",
   "present": "Hozirgi vaqt",
-  "years": "yil"
+  "years": "yil",
+  "saving": "Saqlanmoqda...",
+  "update": "Yangilash",
+  "error": "Xato",
+  "success": "Muvaffaqiyat",
+  "fillRequiredFields": "Iltimos, barcha majburiy maydonlarni to'ldiring",
+  "educationSaved": "Ta'lim muvaffaqiyatli saqlandi",
+  "educationSaveError": "Ta'limni saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
 }

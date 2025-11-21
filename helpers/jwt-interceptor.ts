@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios'
 import { HTTP_CODE_PRECONDITION_FAILED, HTTP_CODE_UNPROCESSABLE_ENTITY } from '@/constants/http-codes'
-import { setAuthTokensConfig, getAuthTokens, clearAuthTokens } from '@/helpers/authentication-manager'
+import { clearAuthTokens, getAuthTokens, setAuthTokensConfig } from '@/helpers/authentication-manager'
+import { AxiosInstance } from 'axios'
 
 const refreshAccessToken = async (refreshToken: string, axiosInstance: AxiosInstance) => {
   try {
@@ -14,7 +14,7 @@ const refreshAccessToken = async (refreshToken: string, axiosInstance: AxiosInst
       // Clear tokens and redirect to login
       clearAuthTokens()
       delete axiosInstance.defaults.headers.common['Authorization']
-      
+
       // Redirect to login page
       if (typeof window !== 'undefined') {
         window.location.href = '/login'
@@ -86,15 +86,17 @@ export const applyJWTResponseInterceptor = (axiosInstance: AxiosInstance) => {
           refreshAccessToken(refreshToken, axiosInstance)
             .then(data => {
               // Save new tokens
+              console.log(data);
+
               setAuthTokensConfig(data)
-              
+
               // Update default headers
               axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + data.token
               originalRequest.headers['Authorization'] = 'Bearer ' + data.token
-              
+
               // Process queued requests
               processQueue(null, data.token)
-              
+
               // Retry original request
               resolve(axiosInstance(originalRequest))
             })

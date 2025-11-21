@@ -93,5 +93,12 @@
   "endYear": "End Year",
   "currentlyStudying": "Currently studying here",
   "present": "Present",
-  "years": "years"
+  "years": "years",
+  "saving": "Saving...",
+  "update": "Update",
+  "error": "Error",
+  "success": "Success",
+  "fillRequiredFields": "Please fill in all required fields",
+  "educationSaved": "Education entry saved successfully",
+  "educationSaveError": "Failed to save education. Please try again."
 }

@@ -1,8 +1,17 @@
+import { EducationApi } from "@/api/domains/education-api";
+import { Education } from "@/api/types/education-api";
+import { AutocompleteInput } from "@/components/AutoCompleteInput";
 import { Combobox } from "@/components/Combobox";
 import { useUniversitiesList } from "@/hooks/use-registration";
+import { useToast } from "@/hooks/use-toast";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+type EducationSectionProps = UserInfoProps & {
+  onRefetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<Education[], Error>>
+}
 
 const degreeOptions = [
   { value: "1", label: "1 year" },
@@ -13,11 +22,14 @@ const degreeOptions = [
   { value: "6", label: "6 years" },
 ]
 
-export const EducationSection = (props: UserInfoProps) => {
+export const EducationSection = (props: EducationSectionProps) => {
   const { t } = useTranslation('profile');
-  const { setUser, user, onSave, savedSections } = props;
-  const { universities } = useUniversitiesList();
+  const { setUser, user, onSave, savedSections, onRefetch } = props;
+  const [savingEducation, setSavingEducation] = useState<{ [key: number]: boolean }>({})
   const [mappedUniversitiesList, setMappedUniversitiesList] = useState<{ value: string, label: string }[]>([{ value: '', label: '' }])
+
+  const { universities } = useUniversitiesList();
+  const { toast } = useToast()
 
   useEffect(() => {
     if (universities.length > 0) {
@@ -67,45 +79,161 @@ export const EducationSection = (props: UserInfoProps) => {
     }
   }
 
+  const handleSaveEducation = async (index: number) => {
+    const edu = user.education[index]
+
+    // Validate required fields
+    if (!edu.educationPlace || !edu.faculty || !edu.specialization || !edu.degree || !edu.startYear) {
+      toast({
+        variant: "destructive",
+        title: t("error"),
+        description: t("fillRequiredFields"),
+      })
+      return
+    }
+
+    setSavingEducation({ ...savingEducation, [index]: true })
+
+    try {
+      if (edu.educationId) {
+        // Update existing education
+        await EducationApi.updateEducation({
+          educationId: edu.educationId,
+          education: {
+            customName: edu.educationPlace,
+            degree: edu.degree,
+            endYear: edu.endYear,
+            faculty: edu.faculty,
+            isCurrent: edu.isCurrent,
+            specialization: edu.specialization,
+            startYear: edu.startYear,
+            universityId: edu.universityId,
+          }
+        })
+      } else {
+        // Create new education
+        await EducationApi.createEducation({
+          customName: edu.educationPlace,
+          degree: edu.degree,
+          endYear: edu.endYear,
+          faculty: edu.faculty,
+          isCurrent: edu.isCurrent,
+          specialization: edu.specialization,
+          startYear: edu.startYear,
+          universityId: edu.universityId,
+        })
+
+        // Update local state with the returned ID
+        const updated = [...user.education]
+        // updated[index].id = result.id
+        setUser({ ...user, education: updated })
+      }
+      const { data } = await onRefetch()
+      setUser({ ...user, education: data })
+
+
+      // Show success feedback
+      setSavingEducation({ ...savingEducation, [index]: false })
+
+      // Optional: Show success message
+      toast({
+        variant: 'success',
+        title: t("success"),
+        description: t("educationSaved"),
+      })
+
+    } catch (error) {
+      console.error("Failed to save education:", error)
+      setSavingEducation({ ...savingEducation, [index]: false })
+      toast({
+        variant: "destructive",
+        title: t("error"),
+        description: t("educationSaveError"),
+      })
+    }
+  }
+
+  const handleDeleteEducation = async (index: number) => {
+    const edu = user.education[index]
+
+    if (edu.educationId) {
+      // If it has an ID, delete from server
+      try {
+        await EducationApi.deleteEducation(edu.educationId)
+      } catch (error) {
+        console.error("Failed to delete education:", error)
+        alert("Failed to delete education. Please try again.")
+        return
+      }
+    }
+
+    // Remove from local state
+    setUser({ ...user, education: user.education.filter((_: any, i: number) => i !== index) })
+  }
+
   return <div className="bg-white rounded-lg shadow-lg p-6">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold">6. {t("education")}</h2>
-      <button
-        onClick={() => onSave("education")}
-        className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700"
-      >
-        {savedSections.education ? <Check size={16} /> : null}
-        {savedSections.education ? t("saved") : t("save")}
-      </button>
     </div>
-
-    <button
-      onClick={handleAddButtonClick}
-      className="flex items-center gap-2 text-primary mb-4 cursor-pointer"
-    >
-      <Plus size={20} />
-      {t("addEducationBtn")}
-    </button>
 
     <div className="space-y-3">
       {user.education.map((edu: any, idx: number) => (
-        <div key={idx} className="border rounded-lg p-4 space-y-3">
+        <div key={idx} className="border rounded-lg p-4 space-y-3 relative">
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="font-semibold text-gray-700">
+              {t("education")} #{idx + 1}
+            </h3>
+            <button
+              onClick={() => handleSaveEducation(idx)}
+              disabled={savingEducation[idx]}
+              className="flex items-center gap-2 bg-green-600 text-white rounded-lg px-3 py-1.5 text-sm hover:bg-green-700 disabled:bg-gray-400"
+            >
+              {savingEducation[idx] ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  {t("saving") || "Saving..."}
+                </>
+              ) : edu.educationId ? (
+                <>
+                  <Check size={14} />
+                  {t("update") || "Update"}
+                </>
+              ) : (
+                <>
+                  <Check size={14} />
+                  {t("save")}
+                </>
+              )}
+            </button>
+          </div>
+
           <div>
             <label className="block text-sm font-medium mb-1">{t("university")}</label>
-            <Combobox
-              options={mappedUniversitiesList}
-              value={edu.universityId || ""}
-              onValueChange={(value) => {
-                const updated = [...user.education]
-                updated[idx].universityId = value as number
-                const selectedUni = universities.find((u) => u.value === value)
-                updated[idx].customName = selectedUni?.label.split(" - ")[0] || ""
-                setUser({ ...user, education: updated })
-              }}
-              placeholder={t("selectUniversity") || "Select university..."}
-              searchPlaceholder={t("searchUniversity") || "Search university..."}
-              emptyText={t("noUniversityFound") || "No university found."}
-            />
+            <div className="space-y-2">
+              <AutocompleteInput
+                options={mappedUniversitiesList}
+                value={edu.educationPlace || ""}
+                onValueChange={(value) => {
+                  const updated = [...user.education]
+                  updated[idx].educationPlace = value
+                  setUser({ ...user, education: updated })
+                }}
+                onSelect={(option) => {
+                  const updated = [...user.education]
+                  if (option) {
+                    // Selected from list
+                    updated[idx].universityId = option.value as number
+                    updated[idx].educationPlace = option.label.split(" - ")[0]
+                  } else {
+                    // Custom input
+                    updated[idx].universityId = null
+                  }
+                  setUser({ ...user, education: updated })
+                }}
+                placeholder={t("searchUniversity") || "Search or enter university name..."}
+              />
+
+            </div>
           </div>
 
           <input
@@ -135,7 +263,6 @@ export const EducationSection = (props: UserInfoProps) => {
           <div>
             <label className="block text-sm font-medium mb-1">{t("degree") || "Degree Duration"}</label>
             <Combobox
-              isSearchable={false}
               options={degreeOptions}
               value={edu.degree || ""}
               onValueChange={(value) => {
@@ -197,9 +324,7 @@ export const EducationSection = (props: UserInfoProps) => {
           </label>
 
           <button
-            onClick={() =>
-              setUser({ ...user, education: user.education.filter((_: any, i: number) => i !== idx) })
-            }
+            onClick={() => handleDeleteEducation(idx)}
             className="flex items-center gap-2 text-red-600 text-sm hover:text-red-700"
           >
             <Trash2 size={16} />
@@ -208,6 +333,13 @@ export const EducationSection = (props: UserInfoProps) => {
         </div>
       ))}
     </div>
-  </div>
 
+    <button
+      onClick={handleAddButtonClick}
+      className="flex items-center gap-2 text-primary mt-4 cursor-pointer"
+    >
+      <Plus size={20} />
+      {t("addEducationBtn")}
+    </button>
+  </div>
 }

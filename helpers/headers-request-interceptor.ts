@@ -21,7 +21,7 @@ export const refreshAccessToken = async (refreshToken: string, axiosInstance: Ax
     const { data } = await axiosInstance.post('/students/refresh-token', {
       refreshToken,
     })
-    return data
+    return data.data
   } catch (error) {
     console.error('Token refresh failed:', error)
     if ((error as any).response && (error as any).response.status === HTTP_CODE_UNPROCESSABLE_ENTITY) {
@@ -68,6 +68,8 @@ export const applyHeadersRequestInterceptor = (axiosInstance: AxiosInstance) => 
         refreshTokenPromise = refreshAccessToken(refreshToken, axiosInstance).then(
           (data) => {
             config.headers['Authorization'] = `Bearer ${data.accessToken}`
+            console.log(data.data);
+
             setAuthTokensConfig(data)
             return data
           },

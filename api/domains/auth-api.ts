@@ -24,9 +24,9 @@ export class AuthApi {
 
     if (response.jwt) {
       setAuthTokensConfig({
-        token: response.jwt.accessToken,
+        accessToken: response.jwt.accessToken,
         refreshToken: response.jwt.refreshToken,
-        expireAt: response.jwt.expiresAt
+        expiresAt: response.jwt.expiresAt
       })
     }
 

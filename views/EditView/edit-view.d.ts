@@ -5,4 +5,5 @@ type UserInfoProps = {
   savedSections: {
     [key: string]: boolean;
   }
+
 }

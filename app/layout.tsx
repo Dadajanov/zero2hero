@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer"
 import MainHeader from "@/components/headers/MainHeader"
+import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/providers"
 import { Inter } from "next/font/google"
 import type React from "react"
@@ -22,6 +23,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </Providers >
+        <Toaster />
       </body>
     </html>
   )
