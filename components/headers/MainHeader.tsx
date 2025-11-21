@@ -1,6 +1,7 @@
 "use client"
 
 import LanguageSwitcher from "@/components/language-switcher"
+import { removeAuthTokens } from "@/helpers/authentication-manager"
 import { useUserStore } from "@/stores/user-store"
 import { motion } from "framer-motion"
 import { LogOut, Menu, User, X } from "lucide-react"
@@ -28,6 +29,7 @@ export default function MainHeader() {
   const handleLogout = () => {
     clearUser()
     localStorage.removeItem("isAuthenticated")
+    removeAuthTokens()
     setIsMobileMenuOpen(false)
     console.log(user);
 
