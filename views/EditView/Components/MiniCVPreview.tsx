@@ -2,12 +2,13 @@
 import { User } from 'lucide-react'
 import { useTranslation } from "react-i18next"
 
+import { Education } from '@/api/types/education-api'
 import { useUserStore } from "@/stores/user-store"
 
 
 export const MiniCVPreview = () => {
   const { t } = useTranslation('profile')
-  const { user } = useUserStore()
+  const { user, studentInfo } = useUserStore()
 
   return <div className="hidden lg:block">
     <div className="sticky top-24">
@@ -33,7 +34,7 @@ export const MiniCVPreview = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold uppercase">
-                  {user.firstName || t("firstNamePlaceholder")} {user.lastName || t("lastNamePlaceholder")}
+                  {user.firstName || t("firstNamePlaceholder")} {user.lastName}
                 </h1>
                 <p className="text-sm font-bold">{user.desiredPosition || t("positionPlaceholder")}</p>
               </div>
@@ -95,17 +96,17 @@ export const MiniCVPreview = () => {
 
             {/* Right Content */}
             <div className="col-span-2 space-y-4">
-              {user.education?.length > 0 && (
+              {studentInfo?.educations && studentInfo.educations?.length > 0 && (
                 <div>
                   <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
                     <span className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-lg">📚</span>
                     {t("education").toUpperCase()}
                   </h3>
-                  {user.education?.map((edu: any, idx: number) => (
+                  {studentInfo.education?.map((edu: Education, idx: number) => (
                     <div key={idx} className="border-l-2 border-primary pl-4 mb-3">
-                      <p className="text-primary font-bold">{edu.years}</p>
-                      <p className="font-bold">{edu.institution || t("institutionPlaceholder")}</p>
-                      <p>{edu.degree} - {edu.specialty}</p>
+                      <p className="text-primary font-bold">{`${edu.startYear} - ${edu.endYear ? edu.endYear : edu.startYear + Number(edu.degree)} `}</p>
+                      <p className="font-bold">{edu.educationPlace || t("institutionPlaceholder")}</p>
+                      <p>{edu.specialization}</p>
                     </div>
                   ))}
                 </div>

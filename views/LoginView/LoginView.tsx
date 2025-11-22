@@ -1,7 +1,7 @@
 "use client"
 
 import { AuthApi } from "@/api/domains/auth-api"
-import { UserApi } from "@/api/domains/user.api"
+import { UserApi } from "@/api/domains/user-api"
 import { useUserStore } from "@/stores/user-store"
 import { useRouter } from 'next/navigation'
 import type React from "react"
@@ -13,7 +13,7 @@ export default function LoginView() {
   const { t } = useTranslation(['login', 'common',])
 
   const router = useRouter()
-  const setUser = useUserStore((state) => state.setUser)
+  const { setUser, user } = useUserStore()
   const [phone, setPhone] = useState("")
   const [code, setCode] = useState("")
   const [sessionId, setSessionId] = useState("")
@@ -85,7 +85,7 @@ export default function LoginView() {
 
       if (response) {
         const userData = await UserApi.fetchUserData()
-        setUser(userData)
+        setUser({ ...userData })
 
         localStorage.setItem("isAuthenticated", "true")
 

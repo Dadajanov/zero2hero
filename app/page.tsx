@@ -1,5 +1,6 @@
 "use client"
 
+import { useUserData } from "@/hooks/useUserData"
 import HomePage from "@/views/HomeView/HomeView"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"

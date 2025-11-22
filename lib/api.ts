@@ -44,10 +44,6 @@ const extractResponse = (response: AxiosResponse) => {
 }
 
 const extractErrorResponse = async (error: AxiosError) => {
-  console.error("[v0] API Error:", error)
-  console.error("[v0] Error response:", error.response)
-  console.error("[v0] Error response data:", error.response?.data)
-  console.error("[v0] Error status:", error.response?.status)
 
   // Don't transform error responses, just log and reject
   return Promise.reject(error)

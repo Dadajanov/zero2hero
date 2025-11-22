@@ -31,7 +31,6 @@ export default function MainHeader() {
     localStorage.removeItem("isAuthenticated")
     removeAuthTokens()
     setIsMobileMenuOpen(false)
-    console.log(user);
 
     router.push("/")
   }

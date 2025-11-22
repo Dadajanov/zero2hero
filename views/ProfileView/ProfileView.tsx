@@ -1,8 +1,7 @@
 "use client"
 
-import { UserApi } from "@/api/domains/user-api"
+import { useUserData } from "@/hooks/useUserData"
 import { useUserStore } from "@/stores/user-store"
-import { useQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
 import { Award, BookOpen, Briefcase, Download, Edit, TrendingUp, User } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -101,25 +100,15 @@ export default function ProfileView() {
   const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  const { user: storeUser, setUser: setStoreUser, isAuthenticated, clearUser } = useUserStore()
+  const { user, setUser, isAuthenticated, clearUser } = useUserStore()
 
-  const {
-    data: userData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["user", "me"],
-    queryFn: () => UserApi.fetchUserData(),
-    enabled: isAuthenticated(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 1,
-  })
+  const { userData, isLoading, isError } = useUserData()
 
   useEffect(() => {
-    if (userData && !storeUser) {
-      setStoreUser(userData)
+    if (userData) {
+      setUser({ ...userData, firstName: userData.studentName.split(" ")[0], lastName: userData.studentName.split(" ")[1] })
     }
-  }, [userData, storeUser, setStoreUser])
+  }, [userData])
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -163,7 +152,7 @@ export default function ProfileView() {
   }
 
 
-  if (!storeUser) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -182,7 +171,7 @@ export default function ProfileView() {
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>${storeUser.firstName} ${storeUser.lastName} - CV</title>
+        <title>${user.firstName} ${user.lastName} - CV</title>
         <style>
           @page { margin: 0; }
           * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -267,26 +256,26 @@ export default function ProfileView() {
       <body>
         <div class="header">
           <div class="logo">ZERO 2 HERO</div>
-          <div class="name">${storeUser.firstName} ${storeUser.lastName}</div>
-          <div class="position">${storeUser.desiredPosition || ""}</div>
+          <div class="name">${user.firstName} ${user.lastName}</div>
+          <div class="position">${user.desiredPosition || ""}</div>
         </div>
 
         <div class="container">
           <div class="sidebar">
             <h3>КОНТАКТЫ</h3>
-            <p>${storeUser.phone}</p>
-            <p>${storeUser.email}</p>
-            <p>${storeUser.city || ""}</p>
-            ${storeUser.socialLinks?.instagram ? `<p>${storeUser.socialLinks.instagram}</p>` : ""}
-            ${storeUser.socialLinks?.telegram ? `<p>${storeUser.socialLinks.telegram}</p>` : ""}
+            <p>${user.phone}</p>
+            <p>${user.email}</p>
+            <p>${user.city || ""}</p>
+            ${user.socialLinks?.instagram ? `<p>${user.socialLinks.instagram}</p>` : ""}
+            ${user.socialLinks?.telegram ? `<p>${user.socialLinks.telegram}</p>` : ""}
 
-            ${storeUser.age ? `<h3>О СЕБЕ</h3><p>Возраст: ${storeUser.age}</p>` : ""}
-            ${storeUser.aboutDescription ? `<p>${storeUser.aboutDescription}</p>` : ""}
+            ${user.age ? `<h3>О СЕБЕ</h3><p>Возраст: ${user.age}</p>` : ""}
+            ${user.aboutDescription ? `<p>${user.aboutDescription}</p>` : ""}
 
-            ${storeUser.languageSkills?.length
+            ${user.languageSkills?.length
         ? `
               <h3>ЯЗЫКИ</h3>
-              ${storeUser.languageSkills
+              ${user.languageSkills
           .map(
             (lang: any) => `
                 <div style="margin-bottom: 10px;">
@@ -300,10 +289,10 @@ export default function ProfileView() {
         : ""
       }
 
-            ${storeUser.technicalSkills?.length
+            ${user.technicalSkills?.length
         ? `
               <h3>НАВЫКИ</h3>
-              ${storeUser.technicalSkills
+              ${user.technicalSkills
           .map(
             (skill: any) => `
                 <div class="skill">
@@ -322,10 +311,10 @@ export default function ProfileView() {
           </div>
 
           <div class="main">
-            ${storeUser.education?.length
+            ${user.education?.length
         ? `
               <h3>📚 ОБРАЗОВАНИЕ</h3>
-              ${storeUser.education
+              ${user.education
           .map(
             (edu: any) => `
                 <div class="timeline-item">
@@ -340,10 +329,10 @@ export default function ProfileView() {
         : ""
       }
 
-            ${storeUser.workExperience?.length
+            ${user.workExperience?.length
         ? `
               <h3>💼 ОПЫТ РАБОТЫ</h3>
-              ${storeUser.workExperience
+              ${user.workExperience
           .map(
             (exp: any) => `
                 <div class="timeline-item">
@@ -366,10 +355,10 @@ export default function ProfileView() {
         : ""
       }
 
-            ${storeUser.achievements?.length
+            ${user.achievements?.length
         ? `
               <h3>🚀 ДОСТИЖЕНИЯ</h3>
-              ${storeUser.achievements
+              ${user.achievements
           .map(
             (ach: any) => `
                 <div class="timeline-item">
@@ -398,6 +387,7 @@ export default function ProfileView() {
   }
 
   // Removed unused state variables: useState(false) for isAuthenticated, useState<any>(demoUserData) for userData, useState(false) for isEditing
+  console.log({ user });
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -409,9 +399,9 @@ export default function ProfileView() {
             <div className="bg-gradient-to-r from-primary to-blue-700 p-4 sm:p-8 text-white">
               <div className="flex flex-col items-center gap-4 sm:gap-6">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
-                  {storeUser.profilePhoto ? (
+                  {user.profilePhoto ? (
                     <img
-                      src={storeUser.profilePhoto || "/placeholder.svg"}
+                      src={user.profilePhoto || "/placeholder.svg"}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
@@ -422,14 +412,14 @@ export default function ProfileView() {
 
                 <div className="flex-1 text-center w-full">
                   <h1 className="text-2xl sm:text-4xl font-bold mb-2">
-                    {storeUser.studentName} {storeUser.lastName}
+                    {user.studentName} {user.lastName}
                   </h1>
                   <p className="text-blue-100 text-lg sm:text-xl mb-2">
-                    {storeUser.desiredPosition || storeUser.status}
+                    {user.desiredPosition || user.status}
                   </p>
-                  {storeUser.profileVideo && (
+                  {user.profileVideo && (
                     <div className="mt-4 max-w-md mx-auto">
-                      <video src={storeUser.profileVideo} controls className="w-full rounded-lg" />
+                      <video src={user.profileVideo} controls className="w-full rounded-lg" />
                     </div>
                   )}
 
@@ -486,20 +476,20 @@ export default function ProfileView() {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("name")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.studentName} {storeUser.middleName} {storeUser.lastName}
+                    {user.studentName} {user.middleName} {user.lastName}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("email")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base break-all">
-                    {storeUser.email || t("notSpecified")}
+                    {user.email || t("notSpecified")}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("phone")}</p>
-                  <p className="font-semibold text-foreground text-sm sm:text-base">{storeUser.phone}</p>
+                  <p className="font-semibold text-foreground text-sm sm:text-base">{user.phone}</p>
                 </div>
               </div>
             </div>
@@ -517,22 +507,22 @@ export default function ProfileView() {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("university")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.university || storeUser.education?.[0]?.institution}
+                    {user.university || user.education?.[0]?.institution}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("course")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.course ? `${storeUser.course} ${t("year")}` : t("notSpecified")}
+                    {user.course ? `${user.course} ${t("year")}` : t("notSpecified")}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("languages")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.languages?.join(", ") ||
-                      storeUser.languageSkills?.map((l: any) => l.language).join(", ") ||
+                    {user.languages?.join(", ") ||
+                      user.languageSkills?.map((l: any) => l.language).join(", ") ||
                       t("notSpecifiedPlural")}
                   </p>
                 </div>
@@ -552,22 +542,22 @@ export default function ProfileView() {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("goal")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.goal || t("notSpecified")}
+                    {user.goal || t("notSpecified")}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("experience")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.experience || t("notSpecified")}
+                    {user.experience || t("notSpecified")}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">{t("skills")}</p>
                   <p className="font-semibold text-foreground text-sm sm:text-base">
-                    {storeUser.skills ||
-                      storeUser.technicalSkills?.map((s: any) => s.name).join(", ") ||
+                    {user.skills ||
+                      user.technicalSkills?.map((s: any) => s.name).join(", ") ||
                       t("notSpecifiedPlural")}
                   </p>
                 </div>

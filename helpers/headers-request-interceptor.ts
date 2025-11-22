@@ -38,7 +38,6 @@ export const applyHeadersRequestInterceptor = (axiosInstance: AxiosInstance) => 
     const originalRequest = config
 
     config.url = buildFullURL(
-      config.baseURL,
       config.url,
       config.params,
       config.paramsSerializer
@@ -68,7 +67,6 @@ export const applyHeadersRequestInterceptor = (axiosInstance: AxiosInstance) => 
         refreshTokenPromise = refreshAccessToken(refreshToken, axiosInstance).then(
           (data) => {
             config.headers['Authorization'] = `Bearer ${data.accessToken}`
-            console.log(data.data);
 
             setAuthTokensConfig(data)
             return data

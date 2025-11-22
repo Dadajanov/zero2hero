@@ -1,5 +1,4 @@
 "use client"
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
 
 import { useUserStore } from "@/stores/user-store"
@@ -7,24 +6,37 @@ import { AboutSection } from "@/views/EditView/Components/AboutSection"
 import { AchievementsSection } from "@/views/EditView/Components/AchievementsSection"
 import { ContactsSection } from "@/views/EditView/Components/ContactsSection"
 import { EducationSection } from "@/views/EditView/Components/EducationSection"
+import { ExperienceSection } from '@/views/EditView/Components/ExperienceSection'
 import { LanguagesSection } from "@/views/EditView/Components/LanguagesSection"
 import { SkillsSections } from "@/views/EditView/Components/SkillsSections"
 import { UserInfoSection } from "@/views/EditView/Components/UserInfoSection"
-import { WorkSection } from "@/views/EditView/Components/WorkSection"
-import { useEducationList } from '../hooks/useEducationList'
+import { useEducationList } from '@/views/EditView/hooks/useEducationList'
+import { useExperiencesList } from '../hooks/useExperiencesList'
 
 
 export default function EditFom() {
-  const router = useRouter()
-  const { user, setUser } = useUserStore()
+  const { user, setUser, setStudentInfo, studentInfo } = useUserStore()
   const { educationsList, educationsListLoading, refetchEducationList } = useEducationList()
+  const { experiencesList, experiencesListLoading, refetchExperiencesList } = useExperiencesList()
   const [savedSections, setSavedSections] = useState<{ [key: string]: boolean }>({})
 
   useEffect(() => {
     if (educationsList && user) {
-      setUser({ ...user, education: educationsList })
+      setStudentInfo({
+        ...studentInfo,
+        educations: educationsList
+      })
     }
   }, [educationsListLoading])
+
+  useEffect(() => {
+    if (experiencesList && user) {
+      setStudentInfo({
+        ...studentInfo,
+        experiences: educationsList
+      })
+    }
+  }, [experiencesListLoading])
 
   const handleSaveSection = (sectionName: string) => {
     localStorage.setItem("registrationData", JSON.stringify(user))
@@ -81,17 +93,16 @@ export default function EditFom() {
     {/* Section 6: Education */}
     <EducationSection
       onRefetch={refetchEducationList}
-      user={user}
-      setUser={setUser}
-      onSave={handleSaveSection}
+      studentInfo={studentInfo}
+      setStudentInfo={setStudentInfo}
       savedSections={savedSections}
     />
 
     {/* Section 7: Work Experience */}
-    <WorkSection
-      user={user}
-      setUser={setUser}
-      onSave={handleSaveSection}
+    <ExperienceSection
+      onRefetch={refetchExperiencesList}
+      studentInfo={studentInfo}
+      setStudentInfo={setStudentInfo}
       savedSections={savedSections}
     />
 

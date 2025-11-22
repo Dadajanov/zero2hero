@@ -102,5 +102,21 @@
   "educationSaved": "Образование успешно сохранено",
   "educationSaveError": "Не удалось сохранить образование. Пожалуйста, попробуйте еще раз.",
   "confirmDelete": "Подтверждение удаления",
-  "confirmDeleteEducation": "Вы уверены, что хотите удалить эту запись об образовании? Это действие нельзя отменить."
+  "confirmDeleteEducation": "Вы уверены, что хотите удалить эту запись об образовании? Это действие нельзя отменить.",
+  "confirmDeleteExperience": "Вы уверены, что хотите удалить эту запись об  опыты работы? Это действие нельзя отменить.",
+  "purpose": "Цель",
+  "selectPurpose": "Выберите цель...",
+  "purposeInternship": "Стажировка",
+  "purposeJob": "Работа",
+  "purposeInternshipAndJob": "Стажировка и работа",
+  "status": "Статус",
+  "selectStatus": "Выберите статус...",
+  "statusApplicant": "Соискатель",
+  "statusStudent": "Студент",
+  "statusGraduate": "Выпускник",
+  "dateOfBirth": "Дата рождения",
+  "gender": "Пол",
+  "selectGender": "Выберите пол...",
+  "genderMale": "Мужской",
+  "genderFemale": "Женский"
 }

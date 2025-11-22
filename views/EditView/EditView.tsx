@@ -12,11 +12,10 @@ import { MiniCVPreview } from '@/views/EditView/Components/MiniCVPreview'
 export default function EditView() {
   const { t } = useTranslation('profile')
   const router = useRouter();
-  const { isAuthenticated, user } = useUserStore()
+  const { isAuthenticated } = useUserStore()
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      console.log(user);
       router.push("/login")
       return
     }

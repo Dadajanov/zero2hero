@@ -21,7 +21,7 @@ import { useUniversitiesList } from "@/hooks/use-registration";
 import { useToast } from "@/hooks/use-toast";
 
 
-type EducationSectionProps = UserInfoProps & {
+type EducationSectionProps = StudentInfoProps & {
   onRefetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<Education[], Error>>
 }
 
@@ -36,9 +36,8 @@ const degreeOptions = [
 
 export const EducationSection = (props: EducationSectionProps) => {
   const { t } = useTranslation(['profile', 'common']);
-  const { setUser, user, onRefetch } = props;
+  const { setStudentInfo, studentInfo, onRefetch } = props;
   const [savingEducation, setSavingEducation] = useState<{ [key: number]: boolean }>({})
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [educationToDelete, setEducationToDelete] = useState<string | boolean | null>(null)
   const [mappedUniversitiesList, setMappedUniversitiesList] = useState<{ value: string, label: string }[]>([{ value: '', label: '' }])
 
@@ -61,11 +60,11 @@ export const EducationSection = (props: EducationSectionProps) => {
   }
 
   const handleAddButtonClick = () => {
-    if (user?.education) {
-      setUser({
-        ...user,
-        education: [
-          ...user.education,
+    if (studentInfo?.education) {
+      setStudentInfo({
+        ...studentInfo,
+        educations: [
+          ...studentInfo.educations,
           {
             universityId: null,
             customName: "",
@@ -79,9 +78,9 @@ export const EducationSection = (props: EducationSectionProps) => {
         ],
       })
     } else {
-      setUser({
-        ...user,
-        education: [
+      setStudentInfo({
+        ...studentInfo,
+        educations: [
           {
             universityId: null,
             customName: "",
@@ -98,7 +97,7 @@ export const EducationSection = (props: EducationSectionProps) => {
   }
 
   const handleSaveEducation = async (index: number) => {
-    const edu = user.education[index]
+    const edu = studentInfo.educations[index]
 
     // Validate required fields
     if (!edu.educationPlace || !edu.faculty || !edu.specialization || !edu.degree || !edu.startYear) {
@@ -142,12 +141,12 @@ export const EducationSection = (props: EducationSectionProps) => {
         })
 
         // Update local state with the returned ID
-        const updated = [...user.education]
+        const updated = [...studentInfo.educations]
         // updated[index].id = result.id
-        setUser({ ...user, education: updated })
+        setStudentInfo({ ...studentInfo, educations: updated })
       }
       const { data } = await onRefetch()
-      setUser({ ...user, education: data })
+      setStudentInfo({ ...studentInfo, educations: data })
 
 
       // Show success feedback
@@ -172,22 +171,33 @@ export const EducationSection = (props: EducationSectionProps) => {
   }
 
   const confirmDeleteEducation = async () => {
-    const edu = user.education[educationToDelete]
+    const edu = studentInfo.educations[educationToDelete]
 
     if (edu.educationId) {
       // If it has an ID, delete from server
       try {
-        await EducationApi.deleteEducation(edu.educationId)
+        await EducationApi.deleteEducation(edu.educationId);
+        const { data } = await onRefetch()
+        setStudentInfo({ ...studentInfo, educations: data })
       } catch (error) {
         console.error("Failed to delete education:", error)
-        alert("Failed to delete education. Please try again.")
+        toast({
+          variant: "destructive",
+          title: t("error"),
+          description: "Failed to delete education. Please try again.",
+        })
         return
       }
     }
 
     // Remove from local state
-    setUser({ ...user, education: user.education.filter((_: any, i: number) => i !== Number(educationToDelete)) })
+    setStudentInfo({
+      ...studentInfo, educations: studentInfo.educations.filter((_: any, i: number) => {
+        return i !== Number(educationToDelete)
+      })
+    })
   }
+
 
   return <div className="bg-white rounded-lg shadow-lg p-6">
     <div className="flex justify-between items-center mb-4">
@@ -195,7 +205,7 @@ export const EducationSection = (props: EducationSectionProps) => {
     </div>
 
     <div className="space-y-3">
-      {user.education && user.education.map((edu: any, idx: number) => (
+      {studentInfo?.educations && studentInfo.educations.map((edu: any, idx: number) => (
         <div key={idx} className="border rounded-lg p-4 space-y-3 relative">
           <div className="flex justify-between items-start mb-2">
             <h3 className="font-semibold text-gray-700">
@@ -232,12 +242,12 @@ export const EducationSection = (props: EducationSectionProps) => {
                 options={mappedUniversitiesList}
                 value={edu.educationPlace || ""}
                 onValueChange={(value) => {
-                  const updated = [...user.education]
+                  const updated = [...studentInfo.educations]
                   updated[idx].educationPlace = value
-                  setUser({ ...user, education: updated })
+                  setStudentInfo({ ...studentInfo, education: updated })
                 }}
                 onSelect={(option) => {
-                  const updated = [...user.education]
+                  const updated = [...studentInfo.educations]
                   if (option) {
                     // Selected from list
                     updated[idx].universityId = option.value as number
@@ -246,7 +256,7 @@ export const EducationSection = (props: EducationSectionProps) => {
                     // Custom input
                     updated[idx].universityId = null
                   }
-                  setUser({ ...user, education: updated })
+                  setStudentInfo({ ...studentInfo, education: updated })
                 }}
                 placeholder={t("searchUniversity") || "Search or enter university name..."}
               />
@@ -259,9 +269,9 @@ export const EducationSection = (props: EducationSectionProps) => {
             placeholder={t("facultyPlaceholder") || "Faculty (e.g., Computer Science)"}
             value={edu.faculty || ""}
             onChange={(e) => {
-              const updated = [...user.education]
+              const updated = [...studentInfo.educations]
               updated[idx].faculty = e.target.value
-              setUser({ ...user, education: updated })
+              setStudentInfo({ ...studentInfo, education: updated })
             }}
             className="w-full px-3 py-2 border rounded-lg"
           />
@@ -271,9 +281,9 @@ export const EducationSection = (props: EducationSectionProps) => {
             placeholder={t("specializationPlaceholder") || "Specialization (e.g., Software Engineering)"}
             value={edu.specialization || ""}
             onChange={(e) => {
-              const updated = [...user.education]
+              const updated = [...studentInfo.educations]
               updated[idx].specialization = e.target.value
-              setUser({ ...user, education: updated })
+              setStudentInfo({ ...studentInfo, education: updated })
             }}
             className="w-full px-3 py-2 border rounded-lg"
           />
@@ -284,9 +294,9 @@ export const EducationSection = (props: EducationSectionProps) => {
               options={degreeOptions}
               value={edu.degree || ""}
               onValueChange={(value) => {
-                const updated = [...user.education]
+                const updated = [...studentInfo.educations]
                 updated[idx].degree = value as string
-                setUser({ ...user, education: updated })
+                setStudentInfo({ ...studentInfo, education: updated })
               }}
               placeholder={t("selectDegree") || "Select degree duration..."}
               searchPlaceholder={t("searchDegree") || "Search..."}
@@ -300,9 +310,9 @@ export const EducationSection = (props: EducationSectionProps) => {
               placeholder={t("startYear") || "Start Year"}
               value={edu.startYear || ""}
               onChange={(e) => {
-                const updated = [...user.education]
+                const updated = [...studentInfo.educations]
                 updated[idx].startYear = e.target.value ? Number.parseInt(e.target.value) : null
-                setUser({ ...user, education: updated })
+                setStudentInfo({ ...studentInfo, education: updated })
               }}
               className="w-full px-3 py-2 border rounded-lg"
               min="1900"
@@ -313,9 +323,9 @@ export const EducationSection = (props: EducationSectionProps) => {
               placeholder={t("endYear") || "End Year"}
               value={edu.endYear || ""}
               onChange={(e) => {
-                const updated = [...user.education]
+                const updated = [...studentInfo.educations]
                 updated[idx].endYear = e.target.value ? Number.parseInt(e.target.value) : null
-                setUser({ ...user, education: updated })
+                setStudentInfo({ ...studentInfo, education: updated })
               }}
               className="w-full px-3 py-2 border rounded-lg"
               min="1900"
@@ -329,12 +339,12 @@ export const EducationSection = (props: EducationSectionProps) => {
               type="checkbox"
               checked={edu.isCurrent}
               onChange={(e) => {
-                const updated = [...user.education]
+                const updated = [...studentInfo.educations]
                 updated[idx].isCurrent = e.target.checked
                 if (e.target.checked) {
                   updated[idx].endYear = null
                 }
-                setUser({ ...user, education: updated })
+                setStudentInfo({ ...studentInfo, education: updated })
               }}
               className="w-4 h-4"
             />

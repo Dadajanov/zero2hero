@@ -102,5 +102,21 @@
   "educationSaved": "Ta'lim muvaffaqiyatli saqlandi",
   "educationSaveError": "Ta'limni saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
   "confirmDelete": "O'chirishni tasdiqlash",
-  "confirmDeleteEducation": "Ushbu ta'lim yozuvini o'chirishga ishonchingiz komilmi? Bu amalni bekor qilib bo'lmaydi."
+  "confirmDeleteEducation": "Ushbu ta'lim yozuvini o'chirishga ishonchingiz komilmi? Bu amalni bekor qilib bo'lmaydi.",
+  "confirmDeleteExperience": "Ushbu ish tajribasi yozuvini o'chirmoqchimisiz? Bu amalni bekor qilib bo'lmaydi.",
+  "purpose": "Maqsad",
+  "selectPurpose": "Maqsadni tanlang...",
+  "purposeInternship": "Amaliyot",
+  "purposeJob": "Ish",
+  "purposeInternshipAndJob": "Amaliyot va ish",
+  "status": "Holat",
+  "selectStatus": "Holatni tanlang...",
+  "statusApplicant": "Nomzod",
+  "statusStudent": "Talaba",
+  "statusGraduate": "Bitiruvchi",
+  "dateOfBirth": "Tug'ilgan sana",
+  "gender": "Jins",
+  "selectGender": "Jinsni tanlang...",
+  "genderMale": "Erkak",
+  "genderFemale": "Ayol"
 }
