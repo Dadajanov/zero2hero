@@ -117,13 +117,6 @@ export default function ProfileView() {
     }
   }, [router, isAuthenticated])
 
-  const handleLogout = () => {
-    clearUser()
-    localStorage.removeItem("isAuthenticated")
-    router.push("/")
-  }
-
-
   if (isLoading || !isAuthenticated()) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">

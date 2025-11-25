@@ -112,11 +112,6 @@ export default function ResumeBuilder() {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated")
-    router.push("/")
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

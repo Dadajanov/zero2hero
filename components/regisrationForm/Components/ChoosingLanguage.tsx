@@ -1,6 +1,6 @@
+import { Language } from "@/types/common.type"
 import { Dispatch, SetStateAction } from "react"
 import { useTranslation } from "react-i18next"
-import { Language } from "../../language-switcher"
 
 type ChoosingLanguageProps = {
   selectedLanguage: Language

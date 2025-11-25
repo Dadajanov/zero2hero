@@ -1,10 +1,17 @@
 import { UserApi } from "@/api/domains/user-api"
 import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 export const useUserData = () => {
   const { i18n } = useTranslation()
-  const isAuthenticated = localStorage.getItem('accessToken')
+  const [isAuthenticated, setAuthenticated] = useState(false)
+
+  useEffect(() => {
+
+    setAuthenticated(Boolean(localStorage.getItem('accessToken')))
+  }, [])
+
   const { data: userData, isLoading, refetch: refetchUserData, isError } = useQuery({
     queryKey: ["get-me", i18n.language],
     queryFn: UserApi.fetchUserData,
@@ -13,7 +20,6 @@ export const useUserData = () => {
   })
 
   if (userData && isAuthenticated) {
-    console.log(userData);
 
   }
 
